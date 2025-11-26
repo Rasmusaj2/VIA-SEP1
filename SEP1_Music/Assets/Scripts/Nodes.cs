@@ -1,16 +1,20 @@
-using UnityEngine;
 
-public class Nodes : MonoBehaviour
+
+public enum Lanes
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    LeftLane,
+    LeftMidLane,
+    RightMidLane,
+    RightLane
+}
 
-    // Update is called once per frame
-    void Update()
+public class BeatNode
+{
+    public float time { get; }
+    public Lanes lane { get; }
+    public BeatNode(float time, Lanes lane)
     {
-        
+        this.time = time;
+        this.lane = lane;
     }
 }
