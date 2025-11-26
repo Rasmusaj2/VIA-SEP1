@@ -29,8 +29,21 @@ public static class JSONPersistence
     public static void SaveToJSON<T>(T data, string filename)
     {
         string fullPath = Path.Combine(Appdatapath, subdirectory, filename);
-        string jsonString = JsonSerializer.Serialize(data, serializerOptions);
+        string jsonString = JsonUtility.ToJson(data, true);
         System.IO.File.WriteAllText(fullPath, jsonString, Encoding.UTF8);
+    }
+
+    public static T LoadFromJSON<T>(string filename)
+    {
+        string fullPath = Path.Combine(Appdatapath, subdirectory, filename);
+        if (!System.IO.File.Exists(fullPath))
+        {
+            Debug.LogWarning($"File not found: {fullPath}");
+            return default(T);
+        }
+        string jsonString = System.IO.File.ReadAllText(fullPath, Encoding.UTF8);
+        T data = JsonUtility.FromJson<T>(jsonString);
+        return data;
     }
 }
 
