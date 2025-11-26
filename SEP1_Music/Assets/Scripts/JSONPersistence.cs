@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Text;
-using System.Text.Json;
 using System.IO;
 
 public static class JSONPersistence
@@ -8,13 +7,7 @@ public static class JSONPersistence
     private static readonly string Appdatapath = Application.persistentDataPath;
     private static readonly string subdirectory = "/MusicGame/";
 
-    private static JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
-    {
-        WriteIndented = true,
-        IndentSize = 2
-    };
-
-    public static bool SuccessfulInitialize()
+    public static bool SuccessfulInitializeDirectory()
 
     {
         string path = Path.Combine(Appdatapath, subdirectory);
