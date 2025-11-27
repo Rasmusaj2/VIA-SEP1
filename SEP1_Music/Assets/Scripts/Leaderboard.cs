@@ -1,11 +1,16 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class LeaderboardEntry
 {
     public string playerName;
     public int score;
+
+    // Default constructor for serialization to restore object from json
+    public LeaderboardEntry() { }
     public LeaderboardEntry(string playerName, int score)
     {
         this.playerName = playerName;
@@ -13,9 +18,12 @@ public class LeaderboardEntry
     }
 }
 
+[Serializable]
 public class Leaderboard
 {
-    private List<LeaderboardEntry> leaderboard = new List<LeaderboardEntry>();
+    public List<LeaderboardEntry> leaderboard = new List<LeaderboardEntry>();
+
+    public Leaderboard() { }
 
     public void AddEntry(string playerName, int score)
     {

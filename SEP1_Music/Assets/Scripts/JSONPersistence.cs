@@ -5,21 +5,19 @@ using System.IO;
 public static class JSONPersistence
 {
     private static readonly string Appdatapath = Application.persistentDataPath;
-    private static readonly string subdirectory = "/MusicGame/";
 
     public static bool SuccessfulInitializeDirectory()
 
     {
-        string path = Path.Combine(Appdatapath, subdirectory);
-        if (!System.IO.Directory.Exists(path))
+        if (!System.IO.Directory.Exists(Appdatapath))
         {
             try
             {
-                System.IO.Directory.CreateDirectory(path);
+                System.IO.Directory.CreateDirectory(Appdatapath);
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Failed to create directory ({path}): " + e.Message);
+                Debug.LogError($"Failed to create directory ({Appdatapath}): " + e.Message);
                 return false;
             }
         }
@@ -28,14 +26,14 @@ public static class JSONPersistence
 
     public static void SaveToJSON<T>(T data, string filename)
     {
-        string fullPath = Path.Combine(Appdatapath, subdirectory, filename);
+        string fullPath = Path.Combine(Appdatapath, filename);
         string jsonString = JsonUtility.ToJson(data, true);
         System.IO.File.WriteAllText(fullPath, jsonString, Encoding.UTF8);
     }
 
     public static T LoadFromJSON<T>(string filename)
     {
-        string fullPath = Path.Combine(Appdatapath, subdirectory, filename);
+        string fullPath = Path.Combine(Appdatapath, filename);
         if (!System.IO.File.Exists(fullPath))
         {
             Debug.LogWarning($"File not found: {fullPath}");
@@ -45,5 +43,13 @@ public static class JSONPersistence
         T data = JsonUtility.FromJson<T>(jsonString);
         return data;
     }
+
+    public static void SaveLeaderboardToJson(Leaderboard leaderboard, string filename)
+    {
+        string fullPath = Path.Combine(Appdatapath, filename);
+        string jsonString = JsonUtility.ToJson(leaderboard, true);
+        System.IO.File.WriteAllText(fullPath, jsonString, Encoding.UTF8);
+    }
+    
 }
 
