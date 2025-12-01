@@ -11,10 +11,10 @@ public enum Lanes
 // Modify to reposition lanes if needed
 public enum LaneLocations
 {
-    LeftLane = -2,
+    LeftLane = -3,
     LeftMidLane = -1,
     RightMidLane = 1,
-    RightLane = 2
+    RightLane = 3
 }
 
 [Serializable]
