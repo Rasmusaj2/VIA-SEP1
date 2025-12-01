@@ -18,6 +18,7 @@ public class BeatmapPlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // example beatmap initialization
         nodes[0] = new BeatNode(1.0f, Lanes.LeftLane);
         nodes[1] = new BeatNode(2.0f, Lanes.RightLane);
         nodes[2] = new BeatNode(3.0f, Lanes.LeftMidLane);
@@ -44,6 +45,8 @@ public class BeatmapPlayer : MonoBehaviour
     }
 
     void SpawnNode(BeatNode node)
+    // Spawns node at appropriate lane position
+    // TODO: Adjust spawn position based on lane and game design
     {
         Vector3 spawnPosition = Vector3.zero;
         switch (node.lane)
@@ -61,6 +64,6 @@ public class BeatmapPlayer : MonoBehaviour
                 spawnPosition = new Vector3(2f, 10f, 0f);
                 break;
         }
-        Instantiate(nodePrefab, spawnPosition, Quaternion.identity);
+        Instantiate(nodePrefab, spawnPosition, Quaternion.identity, transform);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class NodeScript : MonoBehaviour
 {
-    public float speed = 5f;
+    public float speed;
     public float despawnHeight = -10f;
 
     public bool nodeHit = false;
@@ -10,7 +10,7 @@ public class NodeScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        speed = gameObject.GetComponentInParent<BeatmapPlayer>().beatmap.NodeSpeed;
     }
 
     // Update is called once per frame

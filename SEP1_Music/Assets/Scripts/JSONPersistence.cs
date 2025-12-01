@@ -4,6 +4,9 @@ using System.IO;
 
 public static class JSONPersistence
 {
+    // remember to serialize your classes by adding [Serializable] above them and making it public
+
+
     private static readonly string Appdatapath = Application.persistentDataPath;
 
     public static bool SuccessfulInitializeDirectory()
@@ -24,6 +27,11 @@ public static class JSONPersistence
         return true;
     }
 
+
+    // Generic method for saving and loading serializable JSON objects
+    // Uses generic type T to allow for any serializable class to be saved
+    // Usage: SaveToJSON<Class>(yourObject, "filename.json");
+    // Filename should include .json extension, automatically saved to Application.persistentDataPath
     public static void SaveToJSON<T>(T data, string filename)
     {
         string fullPath = Path.Combine(Appdatapath, filename);
@@ -31,6 +39,8 @@ public static class JSONPersistence
         System.IO.File.WriteAllText(fullPath, jsonString, Encoding.UTF8);
     }
 
+    // Usage: Class object = LoadFromJSON<Class>("filename.json");
+    // Returns default(T) if file not found, automatically loads from Application.persistentDataPath
     public static T LoadFromJSON<T>(string filename)
     {
         string fullPath = Path.Combine(Appdatapath, filename);
@@ -44,6 +54,7 @@ public static class JSONPersistence
         return data;
     }
 
+    // Leaderboard specific methods for convenience
     public static void SaveLeaderboardToJson(Leaderboard leaderboard, string filename)
     {
         string fullPath = Path.Combine(Appdatapath, filename);
