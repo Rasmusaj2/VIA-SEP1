@@ -6,18 +6,23 @@ using UnityEditor.Experimental.GraphView;
 public class BeatmapPlayer : MonoBehaviour
 {
     public Beatmap beatmap;
-    public BeatNode[] nodes = new BeatNode[10];
+    [SerializeField] private BeatNode[] nodes = new BeatNode[10];
     public GameObject nodePrefab;
 
     public int currentNodeIndex = 0;
     public float playtime = 0f;
-    
-    public List<BeatNode> ActiveNodes = new List<BeatNode>();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Unity force check to avoid IndexOutOfRangeException
+        if (nodes == null || nodes.Length < 10)
+        {
+            nodes = new BeatNode[10];
+            Debug.Log("BeatmapPlayer: 'nodes' array initialized to length 10 to avoid IndexOutOfRangeException.");
+        }
+
         // example beatmap initialization
         nodes[0] = new BeatNode(1.0f, Lanes.LeftLane);
         nodes[1] = new BeatNode(2.0f, Lanes.RightLane);
@@ -36,10 +41,35 @@ public class BeatmapPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playtime += Time.deltaTime;
-        if (playtime >= nodes[currentNodeIndex].time && currentNodeIndex <= nodes.Length)
+        if (beatmap == null || beatmap.Nodes == null || beatmap.Nodes.Length == 0)
         {
-            SpawnNode(nodes[currentNodeIndex]);
+            Debug.LogWarning("No beatmap or nodes to play.");
+            return;
+        }
+
+        // Safety check for currentNodeIndex bounds
+        if (currentNodeIndex < 0) currentNodeIndex = 0;
+
+
+        playtime += Time.deltaTime;
+
+        if (currentNodeIndex >= beatmap.Nodes.Length)
+        {
+            return; // All nodes spawned
+        }
+
+        if (playtime >= beatmap.Nodes[currentNodeIndex].time)
+        {
+            BeatNode node = beatmap.Nodes[currentNodeIndex];
+            if (node != null)
+            {
+                SpawnNode(node);
+            }
+            else
+            {
+                Debug.LogWarning($"BeatNode at index {currentNodeIndex} is null.");
+            }
+
             currentNodeIndex++;
         }
     }
