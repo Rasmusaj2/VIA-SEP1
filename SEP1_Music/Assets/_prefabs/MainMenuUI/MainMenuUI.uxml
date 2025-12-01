@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_prefabs/MainMenuUI/MainMenuUSS.uss?fileID=7433441132597879392&amp;guid=fb6cf73fbc3ca3a469584353e3864469&amp;type=3#MainMenuUSS" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement name="menuBG" style="flex-grow: 1; align-items: center; justify-content: center; align-self: auto; align-content: flex-start; background-image: none; background-color: rgb(99, 99, 99);">
+            <ui:Label text="RHYTHM GAME" name="titeltext" class="menu-title menu-text" />
+            <ui:Button text="START" name="startbutton" class="menu-button menu-text menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button23.png?fileID=2800000&amp;guid=01bee15b8af408447959d708486d4c1f&amp;type=3#Button23&quot;);" />
+            <ui:Button text="OPTIONS" name="optionsbutton" class="menu-button menu-text menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button21.png?fileID=2800000&amp;guid=0cb6f580da8abba4bb8e077992795032&amp;type=3#Button21&quot;);" />
+            <ui:Button text="LEADERBOARD" name="leaderboardbutton" class="menu-button menu-text menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button24.png?fileID=2800000&amp;guid=cce855fec56dff74092c2bfd1f5910e2&amp;type=3#Button24&quot;);" />
+            <ui:Button text="EXIT" name="exitbutton" class="menu-button menu-text menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button25.png?fileID=2800000&amp;guid=92124390210bd6b49b1f04d144210a61&amp;type=3#Button25&quot;);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

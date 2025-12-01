@@ -1,0 +1,47 @@
+.menu-button {
+    transform-origin: center;
+    width: 27%;
+    height: 20%;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    margin-top: -30px;
+    margin-right: -30px;
+    margin-bottom: -30px;
+    margin-left: -30px;
+    visibility: visible;
+    font-size: 29px;
+    -unity-background-scale-mode: stretch-to-fill;
+    background-color: rgba(0, 0, 0, 0);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.menu-title {
+    font-size: 123px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    transform-origin: center;
+    rotate: 0;
+    translate: 0 -21px;
+}
+
+.menu-text {
+    -unity-font-definition: url("project://database/Assets/_fonts/PressStart2P-Regular.ttf?fileID=12800000&guid=552daec60ab31f3429a62014b741a7cd&type=3#PressStart2P-Regular");
+}
+
+.menu_button:hover {
+    scale: 1.075 1.075;
+    transition-property: scale;
+    transition-duration: 0.25s;
+    transition-timing-function: ease;
+}
