@@ -10,13 +10,22 @@ public class NodeScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        speed = gameObject.GetComponentInParent<BeatmapPlayer>().beatmap.NodeSpeed;
+        if (gameObject.GetComponentInParent<BeatmapPlayer>() != null)
+        {
+            speed = gameObject.GetComponentInParent<BeatmapPlayer>().beatmap.NodeSpeed;
+            Debug.Log("Loaded speed from BeatmapPlayer: " + speed);
+        } else
+        {
+            speed =  gameObject.GetComponentInParent<InfinitePlayer>().currentSpeed;
+            Debug.Log("Loaded speed from InfinitePlayer: " + speed);
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position += Vector3.down * speed * Time.deltaTime;
+        gameObject.transform.position += Vector3.down * (speed / 10.0f) * Time.deltaTime;
         HeightCheck();
     }
 
