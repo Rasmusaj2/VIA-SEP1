@@ -16,11 +16,10 @@ public class BeatmapPlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (CrossSceneManager.SelectedBeatmap != null)
+        if (CrossSceneManager.SelectedMap != null)
         {
-            beatmap = CrossSceneManager.SelectedBeatmap;
+            beatmap = CrossSceneManager.SelectedMap.beatmap;
             Debug.Log($"Loaded beatmap: {beatmap.MapName} with {beatmap.Nodes.Length} nodes.");
-            CrossSceneManager.SelectedBeatmap = null; // Clear after loading
         }
         else
         {

@@ -19,6 +19,22 @@ public class MainMenuController : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("MainMenuController started");
+        UserMaps.RefreshMaps();
+
+        // Init persistent data directory at game boot
+        if (CrossSceneManager.FirstBoot) {
+            bool initSuccess = JSONPersistence.SuccessfulInitializeDirectory();
+            if (initSuccess)
+            {
+                Debug.Log("Persistent data directory initialized successfully.");
+            }
+            else
+            {
+                Debug.LogError("Failed to initialize persistent data directory.");
+            }
+            CrossSceneManager.FirstBoot = false;
+        }
 
         // Elementer fra UI hentes, hvorefter deres Actions tilknyttes metoder.
         ui = GetComponent<UIDocument>().rootVisualElement;

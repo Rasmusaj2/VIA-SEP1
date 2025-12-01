@@ -6,5 +6,7 @@ using UnityEngine.SceneManagement;
 
 public static class CrossSceneManager
 {
-    public static Beatmap SelectedBeatmap;
+    public static Map SelectedMap;
+    public static bool FirstBoot = true;
+
 }
