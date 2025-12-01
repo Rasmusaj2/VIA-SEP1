@@ -75,13 +75,13 @@ public class BeatmapPlayer : MonoBehaviour
                 spawnPosition = new Vector3((float)LaneLocations.LeftLane, 10f, 0f);
                 break;
             case Lanes.LeftMidLane:
-                spawnPosition = new Vector3(-1f, 10f, 0f);
+                spawnPosition = new Vector3((float)LaneLocations.LeftMidLane, 10f, 0f);
                 break;
             case Lanes.RightMidLane:
-                spawnPosition = new Vector3(1f, 10f, 0f);
+                spawnPosition = new Vector3((float)LaneLocations.RightLane, 10f, 0f);
                 break;
             case Lanes.RightLane:
-                spawnPosition = new Vector3(2f, 10f, 0f);
+                spawnPosition = new Vector3((float)LaneLocations.RightMidLane, 10f, 0f);
                 break;
         }
         Instantiate(nodePrefab, spawnPosition, Quaternion.identity, transform);
