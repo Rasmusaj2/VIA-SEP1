@@ -7,6 +7,7 @@ public class BeatmapPlayer : MonoBehaviour
 {
     public Beatmap beatmap;
     public BeatNode[] nodes = new BeatNode[10];
+    public GameObject nodePrefab;
 
     public int currentNodeIndex = 0;
     public float playtime = 0f;
@@ -35,12 +36,31 @@ public class BeatmapPlayer : MonoBehaviour
     void Update()
     {
         playtime += Time.deltaTime;
-        if (playtime > nodes[currentNodeIndex].time)
+        if (playtime >= nodes[currentNodeIndex].time && currentNodeIndex <= nodes.Length)
         {
-            ActiveNodes.Add(nodes[currentNodeIndex]);
+            SpawnNode(nodes[currentNodeIndex]);
             currentNodeIndex++;
         }
+    }
 
-        // todo, actually use the nodes, move down screen, deactive when passed
+    void SpawnNode(BeatNode node)
+    {
+        Vector3 spawnPosition = Vector3.zero;
+        switch (node.lane)
+        {
+            case Lanes.LeftLane:
+                spawnPosition = new Vector3(-2f, 10f, 0f);
+                break;
+            case Lanes.LeftMidLane:
+                spawnPosition = new Vector3(-1f, 10f, 0f);
+                break;
+            case Lanes.RightMidLane:
+                spawnPosition = new Vector3(1f, 10f, 0f);
+                break;
+            case Lanes.RightLane:
+                spawnPosition = new Vector3(2f, 10f, 0f);
+                break;
+        }
+        Instantiate(nodePrefab, spawnPosition, Quaternion.identity);
     }
 }
