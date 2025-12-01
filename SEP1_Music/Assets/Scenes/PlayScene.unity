@@ -148,12 +148,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9992a8e79be5a9f449399075f176d2d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSpeed: 25
-  currentSpeed: 5
   playtime: 0
   nodePrefab: {fileID: 4479889874610542681, guid: d72b50e12371beb488d43cc16d674e5d, type: 3}
   lastLane: 0
   lastNodeTime: 0
+  StartSpeed: 25
+  MaxSpeed: 100
+  speedIncreaseRate: 15
+  currentSpeed: 5
+  BaseSpawnInterval: 2
+  MinSpawnInterval: 0.5
+  spawnIntervalDecreaseRate: 10
   SpawnInterval: 0.5
 --- !u!4 &978979773
 Transform:
