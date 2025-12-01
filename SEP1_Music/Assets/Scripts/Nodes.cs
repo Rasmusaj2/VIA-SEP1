@@ -8,6 +8,15 @@ public enum Lanes
     RightLane
 }
 
+// Modify to reposition lanes if needed
+public enum LaneLocations
+{
+    LeftLane = -2,
+    LeftMidLane = -1,
+    RightMidLane = 1,
+    RightLane = 2
+}
+
 [Serializable]
 public class BeatNode
 {

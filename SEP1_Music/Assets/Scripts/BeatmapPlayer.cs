@@ -72,7 +72,7 @@ public class BeatmapPlayer : MonoBehaviour
         switch (node.lane)
         {
             case Lanes.LeftLane:
-                spawnPosition = new Vector3(-2f, 10f, 0f);
+                spawnPosition = new Vector3((float)LaneLocations.LeftLane, 10f, 0f);
                 break;
             case Lanes.LeftMidLane:
                 spawnPosition = new Vector3(-1f, 10f, 0f);
