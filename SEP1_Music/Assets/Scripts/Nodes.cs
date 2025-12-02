@@ -1,5 +1,11 @@
+using NUnit.Framework;
+using UnityEngine;
 using System;
+using System.IO;
+using System.Collections.Generic;
+using UnityEditorInternal;
 
+[Serializable]
 public enum Lanes
 {
     LeftLane,
@@ -8,11 +14,24 @@ public enum Lanes
     RightLane
 }
 
+// Modify to reposition lanes if needed
+[Serializable]
+public enum LaneLocations
+{
+    LeftLane = -3,
+    LeftMidLane = -1,
+    RightMidLane = 1,
+    RightLane = 3
+}
+
+
+// SERIALIZED FIELDS CANNOT BE PROPERTIES, MUST BE PUBLIC FIELDS OR [SERIALIZEFIELD] PRIVATE FIELDS
+
 [Serializable]
 public class BeatNode
 {
-    public float time { get; }
-    public Lanes lane { get; }
+    public float time;
+    public Lanes lane;
     public BeatNode(float time, Lanes lane)
     {
         this.time = time;
@@ -23,24 +42,84 @@ public class BeatNode
 [Serializable]
 public class Beatmap
 {
-    public string MapName { get; }
-    public string Author { get; }
-    public string Artist { get; }
+    public string MapName;
+    public string Author;
+    public string Artist;
 
-    public float NodeSpeed { get; }
+    public float NodeSpeed;
 
+    public List<BeatNode> Nodes;
 
-    public BeatNode[] Nodes { get; }
-
-    public Beatmap(BeatNode[] nodes, string author, string artist, float nodeSpeed)
+    public Beatmap(List<BeatNode> nodes, string author, string artist, float nodeSpeed)
     {
         // Make sure nodes are kept in order for playback
         // Use of lambda function to make sure to sort based on node-time (could be done by overriding compareTo as well)
-        Array.Sort(nodes, (a,b) => a.time.CompareTo(b.time));
+        nodes.Sort((a,b) => a.time.CompareTo(b.time));
 
         Nodes = nodes;
         Author = author;
         Artist = artist;
         NodeSpeed = nodeSpeed;
     }
+}
+
+public class Map
+{ 
+    public string MapFolder { get; }
+    public Beatmap beatmap { get; }
+    public Leaderboard leaderboard { get; }
+    public string AudioFilePath { get; }
+    public string CoverFilePath { get; }
+
+    public Map(string mapFolder)
+    {
+        MapFolder = mapFolder;
+        beatmap = JSONPersistence.LoadFromJSON<Beatmap>(Path.Combine(mapFolder, "beatmap.json"));
+        leaderboard = JSONPersistence.LoadFromJSON<Leaderboard>(Path.Combine(mapFolder, "leaderboard.json")) ?? new Leaderboard();
+        AudioFilePath = Path.Combine(mapFolder, "audio.mp3") ?? null;
+        CoverFilePath = Path.Combine(mapFolder, "cover.png") ?? null;
+    }
+
+    public void SaveLeaderboard()
+    {
+        JSONPersistence.SaveToJSON<Leaderboard>(leaderboard, Path.Combine(MapFolder, "leaderboard.json"));
+    }
+}
+
+public static class UserMaps
+{
+    public static string MapFolder = Path.Combine(JSONPersistence.Appdatapath, "maps");
+    public static List<Map> Maps = new List<Map>();
+
+    public static void RefreshMaps()
+    {
+        Maps.Clear();
+        if (Directory.Exists(MapFolder))
+        {
+            string[] mapDirectories = Directory.GetDirectories(MapFolder);
+            foreach (string dir in mapDirectories)
+            {
+                if (!File.Exists(Path.Combine(dir, "beatmap.json")))
+                {
+                    Debug.LogWarning($"No beatmap.json found in directory: {dir}");
+                    continue;
+                }
+
+                Map map = new Map(dir);
+                if (map.beatmap != null)
+                {
+                    Maps.Add(map);
+                }
+                else
+                {
+                    Debug.LogWarning($"Beatmap not found or invalid in directory: {dir}");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Maps directory does not exist: {MapFolder}");
+        }
+    }
+
 }

@@ -7,22 +7,23 @@ public static class JSONPersistence
     // remember to serialize your classes by adding [Serializable] above them and making it public
 
 
-    private static readonly string Appdatapath = Application.persistentDataPath;
+    public static readonly string Appdatapath = Application.persistentDataPath;
 
     public static bool SuccessfulInitializeDirectory()
 
     {
-        if (!System.IO.Directory.Exists(Appdatapath))
+        try
         {
-            try
-            {
-                System.IO.Directory.CreateDirectory(Appdatapath);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"Failed to create directory ({Appdatapath}): " + e.Message);
-                return false;
-            }
+            Debug.Log($"Attempting to initialize directory: {Appdatapath}");
+            System.IO.Directory.CreateDirectory(Appdatapath);
+            Debug.Log($"Created directory at: {Appdatapath}");
+            System.IO.Directory.CreateDirectory(Path.Combine(Appdatapath, "maps"));
+            Debug.Log($"Created directory at: {Path.Combine(Appdatapath, "maps")}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to create directory ({Appdatapath}): " + e.Message);
+            return false;
         }
         return true;
     }
