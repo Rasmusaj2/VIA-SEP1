@@ -1,15 +1,19 @@
 using UnityEngine;
 
+public enum HitPhase
+{
+    Attack,
+    Release,
+}
+
 public class BeatmapController : MonoBehaviour
 {
-    public double TimeStart;
+    public double timeStart;
 
-    public void Hit(Lanes lane, double time) { }
-
-    public void Release(Lanes lane, double time) { }
+    public void Hit(Lanes lane, HitPhase phase, double time) { }
 
     void Awake()
     {
-        TimeStart = Time.realtimeSinceStartupAsDouble;
+        timeStart = Time.realtimeSinceStartupAsDouble;
     }
 }

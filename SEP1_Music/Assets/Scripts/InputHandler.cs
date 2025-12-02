@@ -11,6 +11,9 @@ public class InputHandler : MonoBehaviour
     public InputActionReference upAction;
     public InputActionReference downAction;
 
+    [Header("Parameters")]
+    public double delayCompensationMilliseconds = 0.0;
+
     [Header("References")]
     public BeatmapController beatmapController;
 
@@ -32,7 +35,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void OnInputPressed(InputAction.CallbackContext context)
+    private void OnInputEvent(InputAction.CallbackContext context)
     {
         // To differentiate the actions, loop through the list of actions
         // until we find the one that was performed, which will be the i-th action
@@ -40,17 +43,12 @@ public class InputHandler : MonoBehaviour
         {
             if (context.action != actionReferences[i].action) continue;
 
-            beatmapController.Hit((Lanes)i, context.time);
-        }
-    }
+            Lanes lane = (Lanes)i;
+            HitPhase phase = (HitPhase)(context.phase - InputActionPhase.Performed); // (Performed = 3, Canceled = 4) -> (0, 1)
+            double delayCompensationSeconds = 0.001 * delayCompensationMilliseconds;
+            double time = context.time - delayCompensationSeconds;
 
-    private void OnInputReleased(InputAction.CallbackContext context)
-    {
-        for (int i = 0; i < actionReferences.Count; i++)
-        {
-            if (context.action != actionReferences[i].action) continue;
-
-            beatmapController.Release((lanes)i, context.time);
+            beatmapController.Hit(lane, phase, time);
         }
     }
 
@@ -76,11 +74,11 @@ public class InputHandler : MonoBehaviour
 
     void Start()
     {
-        // Bind the input callbacks. The same callbacks are bound to all actions
+        // Bind the input callbacks. The same callback is bound to all actions
         foreach (var actionReference in actionReferences)
         {
-            actionReference.action.performed += OnInputPressed;
-            actionReference.action.canceled += OnInputReleased;
+            actionReference.action.performed += OnInputEvent;
+            actionReference.action.canceled += OnInputEvent;
         }
     }
 }
