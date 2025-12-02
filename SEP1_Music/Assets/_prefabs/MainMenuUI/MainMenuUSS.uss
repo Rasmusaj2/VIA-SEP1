@@ -6,36 +6,31 @@
     border-right-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
-    margin-top: -30px;
-    margin-right: -30px;
-    margin-bottom: -30px;
-    margin-left: -30px;
-    visibility: visible;
-    font-size: 29px;
+    margin-top: -1.5%;
+    margin-right: -1.5%;
+    margin-bottom: -1.5%;
+    margin-left: -1.5%;
+    font-size: 226%;
     -unity-background-scale-mode: stretch-to-fill;
     background-color: rgba(0, 0, 0, 0);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    padding-top: 0%;
+    padding-right: 0%;
+    padding-bottom: 0%;
+    padding-left: 0%;
+    -unity-text-align: middle-center;
 }
 
 .menu-title {
-    font-size: 123px;
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0;
+    font-size: 881%;
     transform-origin: center;
-    rotate: 0;
-    translate: 0 -21px;
+    translate: 0% -19%;
 }
 
-.menu-text {
+.menu-textfont {
     -unity-font-definition: url("project://database/Assets/_fonts/PressStart2P-Regular.ttf?fileID=12800000&guid=552daec60ab31f3429a62014b741a7cd&type=3#PressStart2P-Regular");
 }
 
@@ -44,4 +39,66 @@
     transition-property: scale;
     transition-duration: 0.25s;
     transition-timing-function: ease;
+}
+
+.options-exitbutton {
+    position: absolute;
+    align-self: flex-end;
+    font-size: 0;
+    background-image: url("project://database/Assets/_prefabs/MainMenuUI/ExitButtonIMG.png?fileID=2800000&guid=39458ab014ab1fc4887cd3787f0f1368&type=3#ExitButtonIMG");
+    width: 9%;
+    height: 16%;
+    -unity-background-scale-mode: scale-and-crop;
+    top: -28px;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.options-settings {
+    font-size: 39px;
+}
+
+.options-slider {
+    width: 691px;
+    align-self: center;
+}
+
+.menu-screen {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.optionspanel {
+    width: 55%;
+    border-top-width: 15px;
+    border-right-width: 15px;
+    border-bottom-width: 15px;
+    border-left-width: 15px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    height: 64%;
+    background-color: rgb(0, 255, 255);
+    position: absolute;
+}
+
+.options-header {
+    font-size: 46px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    border-bottom-width: 11px;
+    margin-bottom: 48px;
 }

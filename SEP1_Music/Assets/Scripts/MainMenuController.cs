@@ -11,29 +11,41 @@ public class MainMenuController : MonoBehaviour
     string leaderboardScene = "LeaderBoardScene";
     string optionsScene = "OptionsScene";
 
-    public VisualElement ui;    
+    public VisualElement mainMenuUI;    
     public Button playButton;
     public Button leaderboardButton;
     public Button exitButton;
     public Button optionsButton;
+    public Button optionsCancelButton;
+
+    public VisualElement optionsPanel;
 
     private void Start()
     {
 
         // Elementer fra UI hentes, hvorefter deres Actions tilknyttes metoder.
-        ui = GetComponent<UIDocument>().rootVisualElement;
+        mainMenuUI = GetComponent<UIDocument>().rootVisualElement;
 
-        playButton = ui.Q<Button>("startbutton");
+        playButton = mainMenuUI.Q<Button>("startbutton");
         playButton.clicked += OnPlayButtonClicked;
 
-        optionsButton = ui.Q<Button>("optionsbutton");
+        optionsButton = mainMenuUI.Q<Button>("optionsbutton");
         optionsButton.clicked += OnOptionsButtonClicked;
 
-        leaderboardButton = ui.Q<Button>("leaderboardbutton");
+        leaderboardButton = mainMenuUI.Q<Button>("leaderboardbutton");
         leaderboardButton.clicked += OnLeaderboardButtonClicked;
 
-        exitButton = ui.Q<Button>("exitbutton");
+        exitButton = mainMenuUI.Q<Button>("exitbutton");
         exitButton.clicked += OnExitButtonClicked;
+
+        exitButton = mainMenuUI.Q<Button>("optionscancelbutton");
+        exitButton.clicked += OnOptionsCancelButtonClicked;
+
+        optionsPanel = mainMenuUI.Q<VisualElement>("optionspanel");
+
+
+        
+        
     }
 
     private void OnPlayButtonClicked()
@@ -45,7 +57,8 @@ public class MainMenuController : MonoBehaviour
     private void OnOptionsButtonClicked()
     {
         Debug.Log("Options button clicked");
-        SceneManager.LoadScene(optionsScene);
+        optionsPanel.SetEnabled(true);
+        optionsPanel.visible = true;
     }
 
     private void OnLeaderboardButtonClicked()
@@ -60,5 +73,12 @@ public class MainMenuController : MonoBehaviour
         
         //Lukker spillet for spilleren (ignoreres af editor)
         Application.Quit();
+    }
+
+    private void OnOptionsCancelButtonClicked()
+    {
+        Debug.Log("Options cancel button clicked");
+        optionsPanel.SetEnabled(false);
+        optionsPanel.visible = false;
     }
 }
