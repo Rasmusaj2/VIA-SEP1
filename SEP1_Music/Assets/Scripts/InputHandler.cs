@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,9 @@ public class InputHandler : MonoBehaviour
     public InputActionReference rightAction;
     public InputActionReference upAction;
     public InputActionReference downAction;
+
+    [Header("References")]
+    public BeatmapController beatmapController;
 
     private List<InputActionReference> actionReferences;
 
@@ -30,11 +34,13 @@ public class InputHandler : MonoBehaviour
 
     private void OnInputPressed(InputAction.CallbackContext context)
     {
+        // To differentiate the actions, loop through the list of actions
+        // until we find the one that was performed, which will be the i-th action
         for (int i = 0; i < actionReferences.Count; i++)
         {
             if (context.action != actionReferences[i].action) continue;
 
-            Debug.Log($"{i.ToString()} pressed");
+            beatmapController.Hit((Lanes)i, context.time);
         }
     }
 
@@ -44,7 +50,7 @@ public class InputHandler : MonoBehaviour
         {
             if (context.action != actionReferences[i].action) continue;
 
-            Debug.Log($"{i.ToString()} released");
+            beatmapController.Release((lanes)i, context.time);
         }
     }
 
@@ -60,6 +66,8 @@ public class InputHandler : MonoBehaviour
 
     void Awake()
     {
+        // Put actions into a list for easier access. These are kept in order
+        // corresponding to the lane that they are associated with
         actionReferences = new List<InputActionReference>()
         {
             leftAction, rightAction, upAction, downAction,
@@ -68,6 +76,7 @@ public class InputHandler : MonoBehaviour
 
     void Start()
     {
+        // Bind the input callbacks. The same callbacks are bound to all actions
         foreach (var actionReference in actionReferences)
         {
             actionReference.action.performed += OnInputPressed;
