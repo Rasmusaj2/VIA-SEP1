@@ -10,16 +10,13 @@ public class TimelineDisplay : MonoBehaviour
     public GameObjectPool semiBarLines;
 
     void Awake()
-    {   
+    {
     }
 
     void Start()
     {
-        barLines.poolSize = maxBars;
-        semiBarLines.poolSize = (beatsPerMeasure - 1) * maxBars;
-
-        barLines.enabled = true;
-        semiBarLines.enabled = true;
+        barLines.Allocate(maxBars);
+        semiBarLines.Allocate((beatsPerMeasure - 1) * maxBars);
     }
 
     void Update()
