@@ -19,7 +19,7 @@ public class BeatmapPlayer : MonoBehaviour
         if (CrossSceneManager.SelectedMap != null)
         {
             beatmap = CrossSceneManager.SelectedMap.beatmap;
-            Debug.Log($"Loaded beatmap: {beatmap.MapName} with {beatmap.Nodes.Length} nodes.");
+            Debug.Log($"Loaded beatmap: {beatmap.MapName} with {beatmap.Nodes.Count} nodes.");
         }
         else
         {
@@ -30,7 +30,7 @@ public class BeatmapPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (beatmap == null || beatmap.Nodes == null || beatmap.Nodes.Length == 0)
+        if (beatmap == null || beatmap.Nodes == null || beatmap.Nodes.Count == 0)
         {
             Debug.LogWarning("No beatmap or nodes to play.");
             return;
@@ -42,7 +42,7 @@ public class BeatmapPlayer : MonoBehaviour
 
         playtime += Time.deltaTime;
 
-        if (currentNodeIndex >= beatmap.Nodes.Length)
+        if (currentNodeIndex >= beatmap.Nodes.Count)
         {
             return; // All nodes spawned
         }

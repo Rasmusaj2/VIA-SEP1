@@ -48,13 +48,13 @@ public class Beatmap
 
     public float NodeSpeed;
 
-    public BeatNode[] Nodes;
+    public List<BeatNode> Nodes;
 
-    public Beatmap(BeatNode[] nodes, string author, string artist, float nodeSpeed)
+    public Beatmap(List<BeatNode> nodes, string author, string artist, float nodeSpeed)
     {
         // Make sure nodes are kept in order for playback
         // Use of lambda function to make sure to sort based on node-time (could be done by overriding compareTo as well)
-        Array.Sort(nodes, (a,b) => a.time.CompareTo(b.time));
+        nodes.Sort((a,b) => a.time.CompareTo(b.time));
 
         Nodes = nodes;
         Author = author;
