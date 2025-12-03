@@ -4,14 +4,15 @@
         <ui:VisualElement name="menuBG" style="flex-grow: 1; align-items: center; justify-content: center; align-self: auto; align-content: flex-start; background-image: none; background-color: rgb(99, 99, 99);">
             <ui:VisualElement name="mainmenu" enabled="true" class="menu-screen" style="position: absolute;">
                 <ui:Label text="RHYTHM GAME" name="titeltext" class="menu-title" />
-                <ui:Button text="START" name="startbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button23.png?fileID=2800000&amp;guid=01bee15b8af408447959d708486d4c1f&amp;type=3#Button23&quot;);" />
-                <ui:Button text="OPTIONS" name="optionsbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button21.png?fileID=2800000&amp;guid=0cb6f580da8abba4bb8e077992795032&amp;type=3#Button21&quot;);" />
-                <ui:Button text="LEADERBOARD" name="leaderboardbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button24.png?fileID=2800000&amp;guid=cce855fec56dff74092c2bfd1f5910e2&amp;type=3#Button24&quot;);" />
-                <ui:Button text="EXIT" name="exitbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/Button25.png?fileID=2800000&amp;guid=92124390210bd6b49b1f04d144210a61&amp;type=3#Button25&quot;);" />
+                <ui:Button text="START" name="startbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/GreenButtonIMG.png?fileID=2800000&amp;guid=01bee15b8af408447959d708486d4c1f&amp;type=3#GreenButtonIMG&quot;);" />
+                <ui:Button text="OPTIONS" name="optionsbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/BlueButtonIMG.png?fileID=2800000&amp;guid=0cb6f580da8abba4bb8e077992795032&amp;type=3#BlueButtonIMG&quot;);" />
+                <ui:Button text="LEADERBOARD" name="leaderboardbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/BrownButtonIMG.png?fileID=2800000&amp;guid=cce855fec56dff74092c2bfd1f5910e2&amp;type=3#BrownButtonIMG&quot;);" />
+                <ui:Button text="EXIT" name="exitbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/RedButtonIMG.png?fileID=2800000&amp;guid=92124390210bd6b49b1f04d144210a61&amp;type=3#RedButtonIMG&quot;);" />
             </ui:VisualElement>
             <ui:VisualElement name="optionspanel" enabled="false" class="optionspanel" style="flex-grow: 1; visibility: hidden;">
                 <ui:Label text="Options" name="optionsheader" class="options-header" />
-                <ui:Button text="Button" name="optionscancelbutton" class="options-exitbutton" />
+                <ui:Button name="optionsapplybutton" class="options-applybutton menu_button" />
+                <ui:Button text="Button" name="optionscancelbutton" class="options-exitbutton menu_button" />
                 <ui:ScrollView name="optionssettings" enabled="true" class="options-settings">
                     <ui:SliderInt label="Audio" value="42" high-value="100" name="audioslider" class="options-slider">
                         <Bindings>

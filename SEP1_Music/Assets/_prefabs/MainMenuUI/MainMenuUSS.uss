@@ -102,3 +102,20 @@
     border-bottom-width: 11px;
     margin-bottom: 48px;
 }
+
+.options-applybutton {
+    position: absolute;
+    align-self: flex-end;
+    justify-content: flex-start;
+    bottom: -27px;
+    background-image: url("project://database/Assets/_prefabs/MainMenuUI/ApplyButtonIMG.png?fileID=2800000&guid=d6fb8fe0a6636234f9e3f6274f65368a&type=3#ApplyButtonIMG");
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: scale-and-crop;
+    width: 12%;
+    height: 17%;
+    right: -33px;
+}

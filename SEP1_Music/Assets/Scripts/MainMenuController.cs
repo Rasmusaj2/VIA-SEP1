@@ -9,7 +9,6 @@ public class MainMenuController : MonoBehaviour
     // Scener skal tilføjes i scene list under build profiles
     string playScene = "PlayScene";
     string leaderboardScene = "LeaderBoardScene";
-    string optionsScene = "OptionsScene";
 
     public VisualElement mainMenuUI;    
     public Button playButton;
@@ -54,8 +53,8 @@ public class MainMenuController : MonoBehaviour
         exitButton = mainMenuUI.Q<Button>("exitbutton");
         exitButton.clicked += OnExitButtonClicked;
 
-        exitButton = mainMenuUI.Q<Button>("optionscancelbutton");
-        exitButton.clicked += OnOptionsCancelButtonClicked;
+        optionsCancelButton = mainMenuUI.Q<Button>("optionscancelbutton");
+        optionsCancelButton.clicked += OnOptionsCancelButtonClicked;
 
         optionsPanel = mainMenuUI.Q<VisualElement>("optionspanel");
 
