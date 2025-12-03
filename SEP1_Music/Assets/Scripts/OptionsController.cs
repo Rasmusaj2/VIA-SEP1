@@ -7,8 +7,8 @@ public class OptionsController : MonoBehaviour
 {
     
     public OptionsData optionsData;
-    public string fileName = "settings.json";
-    public string fullPath;
+    private string fileName = "settings.json";
+    private string fullPath;
 
     public VisualElement mainMenuUI;
     public ScrollView optionsSettings;
@@ -22,7 +22,7 @@ public class OptionsController : MonoBehaviour
         //Læser eksisterende settings fil ved start. Opretter en ny, hvis den ikke findes.
         fullPath = Path.Combine(JSONPersistence.Appdatapath, fileName);
 
-        if (File.Exists(fullPath))
+        if (File.Exists(fullPath) == true)
         {
             optionsData = JSONPersistence.LoadFromJSON<OptionsData>(fileName);
         }
