@@ -1,0 +1,20 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_prefabs/PlaySceneUI/PlaySceneUSS.uss?fileID=7433441132597879392&amp;guid=5d805c456a8b2ba4d8ee9a33903ee45e&amp;type=3#PlaySceneUSS" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:Label text="0" name="combotxt" class="playscene-combo">
+            <Bindings>
+                <ui:DataBinding property="text" data-source-path="combo" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
+            </Bindings>
+        </ui:Label>
+        <ui:Label text="000000" name="scoretxt" class="playscene-score">
+            <Bindings>
+                <ui:DataBinding property="text" data-source-path="scoreText" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
+            </Bindings>
+        </ui:Label>
+        <ui:Label text="100%" name="accuracytxt" class="playscene-score">
+            <Bindings>
+                <ui:DataBinding property="text" data-source-path="accuracyText" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
+            </Bindings>
+        </ui:Label>
+    </ui:VisualElement>
+</ui:UXML>

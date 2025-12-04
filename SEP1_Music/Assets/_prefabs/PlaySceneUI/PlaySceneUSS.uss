@@ -1,0 +1,15 @@
+.playscene-combo {
+    align-items: stretch;
+    align-self: center;
+    align-content: flex-start;
+    bottom: -247px;
+    background-size: 100% 100%;
+    width: auto;
+    height: auto;
+    font-size: 66px;
+}
+
+.playscene-score {
+    font-size: 66px;
+    align-self: flex-end;
+}

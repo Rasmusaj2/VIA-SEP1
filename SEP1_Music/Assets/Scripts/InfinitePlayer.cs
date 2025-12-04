@@ -5,6 +5,8 @@ public class InfinitePlayer : MonoBehaviour
 {
     public float playtime = 0f;
     public GameObject nodePrefab;
+    public int health = 3;
+    private bool hasLost;
 
     [Header("Lane Settings")]
     [SerializeField] private Lanes lastLane;
@@ -27,6 +29,7 @@ public class InfinitePlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
         currentSpeed = StartSpeed;
         SpawnInterval = BaseSpawnInterval;
     }
@@ -34,25 +37,28 @@ public class InfinitePlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playtime += Time.deltaTime;
-        if (playtime - lastNodeTime >= SpawnInterval)
-        {
-            
-            // Randomly select a lane different from the last one
-            Lanes newLane;
-            do
+        //if (health > 0)
+        //{
+            playtime += Time.deltaTime;
+            if (playtime - lastNodeTime >= SpawnInterval)
             {
-                newLane = (Lanes)Random.Range(0, 4); // 4 lanes, 0 to 3 (can technically get stuck in a loop but psuedo-random should make it unlikely)
-            } while (newLane == lastLane);
 
-            BeatNode newNode = new BeatNode(playtime, newLane);
+                // Randomly select a lane different from the last one
+                Lanes newLane;
+                do
+                {
+                    newLane = (Lanes)Random.Range(0, 4); // 4 lanes, 0 to 3 (can technically get stuck in a loop but psuedo-random should make it unlikely)
+                } while (newLane == lastLane);
 
-            SpawnNode(newNode);
-            lastLane = newLane;
-            lastNodeTime = playtime;
-        }
-        CalculateNewSpeed();
-        CalculateNewSpawnInterval();
+                BeatNode newNode = new BeatNode(playtime, newLane);
+
+                SpawnNode(newNode);
+                lastLane = newLane;
+                lastNodeTime = playtime;
+            }
+            CalculateNewSpeed();
+            CalculateNewSpawnInterval();
+        //}
     }
 
     void SpawnNode(BeatNode node)

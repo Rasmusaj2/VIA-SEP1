@@ -3,7 +3,8 @@ using UnityEngine;
 public class NodeScript : MonoBehaviour
 {
     public float speed;
-    public float despawnHeight = -10f;
+    public float despawnHeight = -4f;
+    
 
     public bool nodeHit = false;
 
@@ -25,16 +26,34 @@ public class NodeScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position += Vector3.down * (speed / 10.0f) * Time.deltaTime;
-        HeightCheck();
+        TestHit();
+
+        if (nodeHit == true)
+        {
+            gameObject.GetComponentInParent<ScoreManager>().EvaluateHit(gameObject.transform.position.y);
+            Destroy(gameObject);
+        }
+        else
+        {
+            gameObject.transform.position += Vector3.down * (speed / 10.0f) * Time.deltaTime;
+            HeightCheck();
+        }
     }
 
     void HeightCheck()
     {
         if (gameObject.transform.position.y <= despawnHeight)
         {
-            // add missed node logic
+            gameObject.GetComponentInParent<ScoreManager>().MissedHit();
             Destroy(gameObject);
+        }
+    }
+
+    void TestHit()
+    {
+        if (gameObject.transform.position.y <= -3)
+        {
+            nodeHit = true;
         }
     }
 }
