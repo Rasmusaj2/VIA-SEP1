@@ -11,6 +11,7 @@ public class ScoreManager : MonoBehaviour
     public float accuracy;
     public string accuracyText = "100%";
     private float maxScore;
+    public string hitText;
 
 
     private static float scoreLinePositionY;
@@ -20,6 +21,7 @@ public class ScoreManager : MonoBehaviour
         playSceneUIDoc.rootVisualElement.Q<Label>("scoretxt").dataSource = this;
         playSceneUIDoc.rootVisualElement.Q<Label>("combotxt").dataSource = this;
         playSceneUIDoc.rootVisualElement.Q<Label>("accuracytxt").dataSource = this;
+        playSceneUIDoc.rootVisualElement.Q<Label>("hittext").dataSource = this;
 
         scoreText = $"{scoreNumber:D6}";
 
@@ -40,6 +42,8 @@ public class ScoreManager : MonoBehaviour
                 break;
             case > -0.5f:
                 this.scoreNumber += 200;
+                hitText = "";
+                hitText = "Great!";
                 combo++;
                 break;
             case > -1:

@@ -13,3 +13,9 @@
     font-size: 66px;
     align-self: flex-end;
 }
+
+.playscene-hittext {
+    align-self: center;
+    bottom: -251px;
+    font-size: 66px;
+}

@@ -6,6 +6,11 @@
                 <ui:DataBinding property="text" data-source-path="combo" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
             </Bindings>
         </ui:Label>
+        <ui:Label name="hittext" class="playscene-hittext" style="transition-property: all; transition-duration: 0s;">
+            <Bindings>
+                <ui:DataBinding property="text" data-source-path="hitText" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
+            </Bindings>
+        </ui:Label>
         <ui:Label text="000000" name="scoretxt" class="playscene-score">
             <Bindings>
                 <ui:DataBinding property="text" data-source-path="scoreText" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
