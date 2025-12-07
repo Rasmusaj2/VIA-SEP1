@@ -9,4 +9,6 @@ public static class CrossSceneManager
     public static Map SelectedMap;
     public static bool FirstBoot = true;
 
+    public static Settings settings;
+
 }
