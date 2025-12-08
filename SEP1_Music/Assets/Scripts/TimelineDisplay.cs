@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Timeline))]
 public class TimelineDisplay : MonoBehaviour
 {
     public int maxBars = 4;

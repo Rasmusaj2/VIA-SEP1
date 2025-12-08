@@ -5,6 +5,7 @@ public class Metronome : MonoBehaviour
     public Timeline timeline;
     public AudioClip beatSoundClip;
     public AudioClip semiBeatSoundClip;
+    [Min(0)]
     public double scheduleAhead = 0.2;
 
     private double nextEventTime;
@@ -20,20 +21,18 @@ public class Metronome : MonoBehaviour
             audioSources[i] = child.AddComponent<AudioSource>();
         }
 
-        nextEventTime = AudioSettings.dspTime;
+        nextEventTime = 0.0;
     }
 
     void Update()
     {
-        double time = AudioSettings.dspTime;
-
-        if (time + scheduleAhead > nextEventTime)
+        if (timeline.time + scheduleAhead > nextEventTime)
         {
             int beat = (int)(timeline.ToBeats(nextEventTime));
             int subdivision = beat % timeline.beatsPerMeasure;
 
             audioSources[source].clip = subdivision == 0 ? beatSoundClip : semiBeatSoundClip;
-            audioSources[source].PlayScheduled(nextEventTime);
+            audioSources[source].PlayScheduled(timeline.ToRealTime(nextEventTime));
             source = (source + 1) % audioSources.Length;
 
             Debug.Log("Scheduled source " + source + " to start at time " + nextEventTime + " (beat " + beat + ")");
