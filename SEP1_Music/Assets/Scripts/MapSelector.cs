@@ -19,6 +19,8 @@ public class MapSelector : MonoBehaviour
     public Button selectButton;
     public Sprite defaultSprite;
 
+    public TMP_Text MaplessText;
+
     [Header("Audio")]
     public float audioFadeDuration = 1.0f;
     public AudioSource musicPreviewSource;
@@ -122,6 +124,18 @@ public class MapSelector : MonoBehaviour
 
             indexer++;
         }
+
+        if (UserMaps.Maps.Count == 0)
+        {
+            MaplessText.gameObject.SetActive(true);
+            selectButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            MaplessText.gameObject.SetActive(false);
+            selectButton.gameObject.SetActive(true);
+        }
+
         ModifyActiveGameObjects();
         OnSelectionChanged();
 
@@ -339,6 +353,13 @@ public class MapSelector : MonoBehaviour
     void OnSelectionChanged()
     {
         string newLeaderboardText = "LEADERBOARD\n";
+        if (UserMaps.Maps.Count == 0) 
+        {
+            LeaderboardTextField.text = "NO MAPS AVAILABLE";
+            rightBigCoverThumbnail.sprite = defaultSprite;
+            return;
+        }
+
         Map selectedMap = UserMaps.Maps[selectedMapIndex];
 
         if (selectedMap.leaderboard != null)
