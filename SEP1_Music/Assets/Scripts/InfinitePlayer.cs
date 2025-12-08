@@ -9,7 +9,7 @@ public class InfinitePlayer : MonoBehaviour
     private bool hasLost;
 
     [Header("Lane Settings")]
-    [SerializeField] private Lanes lastLane;
+    [SerializeField] private Lane lastLane;
     [SerializeField] private float lastNodeTime;
 
     [Header("Speed Settings")]
@@ -44,10 +44,10 @@ public class InfinitePlayer : MonoBehaviour
             {
 
                 // Randomly select a lane different from the last one
-                Lanes newLane;
+                Lane newLane;
                 do
                 {
-                    newLane = (Lanes)Random.Range(0, 4); // 4 lanes, 0 to 3 (can technically get stuck in a loop but psuedo-random should make it unlikely)
+                    newLane = (Lane)Random.Range(0, 4); // 4 lanes, 0 to 3 (can technically get stuck in a loop but psuedo-random should make it unlikely)
                 } while (newLane == lastLane);
 
                 BeatNode newNode = new BeatNode(playtime, newLane);
@@ -68,16 +68,16 @@ public class InfinitePlayer : MonoBehaviour
         Vector3 spawnPosition = Vector3.zero;
         switch (node.lane)
         {
-            case Lanes.LeftLane:
+            case Lane.LeftLane:
                 spawnPosition = new Vector3((float)LaneLocations.LeftLane, 10f, 0f);
                 break;
-            case Lanes.LeftMidLane:
+            case Lane.LeftMidLane:
                 spawnPosition = new Vector3((float)LaneLocations.LeftMidLane, 10f, 0f);
                 break;
-            case Lanes.RightMidLane:
+            case Lane.RightMidLane:
                 spawnPosition = new Vector3((float)LaneLocations.RightLane, 10f, 0f);
                 break;
-            case Lanes.RightLane:
+            case Lane.RightLane:
                 spawnPosition = new Vector3((float)LaneLocations.RightMidLane, 10f, 0f);
                 break;
         }

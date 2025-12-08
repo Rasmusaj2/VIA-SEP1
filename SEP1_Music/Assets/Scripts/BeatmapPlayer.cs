@@ -70,16 +70,16 @@ public class BeatmapPlayer : MonoBehaviour
         Vector3 spawnPosition = Vector3.zero;
         switch (node.lane)
         {
-            case Lanes.LeftLane:
+            case Lane.LeftLane:
                 spawnPosition = new Vector3((float)LaneLocations.LeftLane, 10f, 0f);
                 break;
-            case Lanes.LeftMidLane:
+            case Lane.LeftMidLane:
                 spawnPosition = new Vector3((float)LaneLocations.LeftMidLane, 10f, 0f);
                 break;
-            case Lanes.RightMidLane:
+            case Lane.RightMidLane:
                 spawnPosition = new Vector3((float)LaneLocations.RightLane, 10f, 0f);
                 break;
-            case Lanes.RightLane:
+            case Lane.RightLane:
                 spawnPosition = new Vector3((float)LaneLocations.RightMidLane, 10f, 0f);
                 break;
         }

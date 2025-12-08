@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEditorInternal;
 
 [Serializable]
-public enum Lanes
+public enum Lane
 {
     LeftLane,
     LeftMidLane,
@@ -31,8 +31,8 @@ public enum LaneLocations
 public class BeatNode
 {
     public float time;
-    public Lanes lane;
-    public BeatNode(float time, Lanes lane)
+    public Lane lane;
+    public BeatNode(float time, Lane lane)
     {
         this.time = time;
         this.lane = lane;

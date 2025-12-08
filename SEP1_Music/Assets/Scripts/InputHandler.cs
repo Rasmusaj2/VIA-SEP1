@@ -43,7 +43,7 @@ public class InputHandler : MonoBehaviour
         {
             if (context.action != actionReferences[i].action) continue;
 
-            Lanes lane = (Lanes)i;
+            Lane lane = (Lane)i;
             HitPhase phase = (HitPhase)(context.phase - InputActionPhase.Performed); // (Performed = 3, Canceled = 4) -> (0, 1)
             double delayCompensationSeconds = 0.001 * delayCompensationMilliseconds;
             double time = context.time - delayCompensationSeconds;

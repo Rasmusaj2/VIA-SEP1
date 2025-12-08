@@ -10,7 +10,7 @@ public class BeatmapController : MonoBehaviour
 {
     public double timeStart;
 
-    public void Hit(Lanes lane, HitPhase phase, double time) { }
+    public void Hit(Lane lane, HitPhase phase, double time) { }
 
     void Awake()
     {
