@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public class TestScript : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class TestScript : MonoBehaviour
         nodes.Add(new BeatNode(10.0f, Lanes.RightLane));
 
         beatmap = new Beatmap(nodes, "Example Beatmap", "Example Artist", 120f);
-        JSONPersistence.SaveToJSON<Beatmap>(beatmap, "maps/test_map/beatmap.json");
+        JSONPersistence.SaveToJSON<Beatmap>(beatmap, Path.Combine(JSONPersistence.Appdatapath, "maps/test_map/beatmap.json"));
     }
 
     // Update is called once per frame

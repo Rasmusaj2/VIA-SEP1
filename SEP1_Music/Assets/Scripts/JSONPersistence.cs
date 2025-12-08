@@ -35,22 +35,20 @@ public static class JSONPersistence
     // Filename should include .json extension, automatically saved to Application.persistentDataPath
     public static void SaveToJSON<T>(T data, string filename)
     {
-        string fullPath = Path.Combine(Appdatapath, filename);
         string jsonString = JsonUtility.ToJson(data, true);
-        System.IO.File.WriteAllText(fullPath, jsonString, Encoding.UTF8);
+        System.IO.File.WriteAllText(filename, jsonString, Encoding.UTF8);
     }
 
     // Usage: Class object = LoadFromJSON<Class>("filename.json");
     // Returns default(T) if file not found, automatically loads from Application.persistentDataPath
     public static T LoadFromJSON<T>(string filename)
     {
-        string fullPath = Path.Combine(Appdatapath, filename);
-        if (!System.IO.File.Exists(fullPath))
+        if (!System.IO.File.Exists(filename))
         {
-            Debug.LogWarning($"File not found: {fullPath}");
+            Debug.LogWarning($"File not found: {filename}");
             return default(T);
         }
-        string jsonString = System.IO.File.ReadAllText(fullPath, Encoding.UTF8);
+        string jsonString = System.IO.File.ReadAllText(filename, Encoding.UTF8);
         T data = JsonUtility.FromJson<T>(jsonString);
         return data;
     }
@@ -58,9 +56,8 @@ public static class JSONPersistence
     // Leaderboard specific methods for convenience
     public static void SaveLeaderboardToJson(Leaderboard leaderboard, string filename)
     {
-        string fullPath = Path.Combine(Appdatapath, filename);
         string jsonString = JsonUtility.ToJson(leaderboard, true);
-        System.IO.File.WriteAllText(fullPath, jsonString, Encoding.UTF8);
+        System.IO.File.WriteAllText(filename, jsonString, Encoding.UTF8);
     }
     
 }
