@@ -12,11 +12,12 @@ public class MapSelector : MonoBehaviour
     [Header("UI References")]
     public Image rightBigCoverThumbnail;
     public GameObject MapItemObject;
-
+    public TMP_Text LeaderboardTextField;
     public Button mainMenuButton;
     public Button mapEditorButton;
     public Button newMapButton;
     public Button selectButton;
+    public Sprite defaultSprite;
 
     [Header("Audio")]
     public float audioFadeDuration = 1.0f;
@@ -33,8 +34,18 @@ public class MapSelector : MonoBehaviour
     [Header("Map Selection")]
     public int keepActive = 5;
     public float degreeOffset = 25.0f;
-    [SerializeField] private int selectedMapIndex = 0;
-    [SerializeField] private string mapPlaySceneName = "BeatmapPlayScene";
+
+    // property to handle selection changes
+    [SerializeField] private int _selectedMapIndex = 0;
+    private int selectedMapIndex
+    {
+        get => _selectedMapIndex;
+        set
+        {
+            _selectedMapIndex = value;
+            OnSelectionChanged();
+        }
+    }
 
     [Header("Rotation Settings")]
     public float rotationDuration = 0.5f;
@@ -46,6 +57,20 @@ public class MapSelector : MonoBehaviour
 
     [SerializeField] private bool isRotating = false;
     [SerializeField] private int stackedRotates = 0;
+
+    [Header("Scene Transition")]
+    public float sceneTransitionDuration = 1.0f;
+    public float sceneTransitionDelay = 0.5f;
+    public float moveCapsuleDistance = 10.0f;
+
+    [SerializeField] private bool isTransitioning = false;
+
+    [Header("Target Scenes")]
+    public string mapPlaySceneName = "BeatmapPlayScene";
+    public string mainMenuSceneName = "MainMenu";
+
+    [Header("Leaderboard Data")]
+    public int leaderboardEntryCount = 10;
 
     [Header("Audio Clips")]
     [SerializeField] private AudioClip currentlyPlayingAudio;
@@ -64,6 +89,33 @@ public class MapSelector : MonoBehaviour
         {
             Quaternion rotation = Quaternion.Euler(0, 0, -degreeOffset * indexer); // Rotate based of offset
             GameObject game_object = Instantiate(MapItemObject, this.transform.position, rotation); // Create object
+
+            // Set subelements of map item
+            Transform Capsule = game_object.transform.GetChild(0);
+            SpriteRenderer spriteRenderer = Capsule.GetChild(0).GetComponent<SpriteRenderer>();
+
+            if (File.Exists(map.CoverFilePath))
+            {
+                Texture2D cover_texture = LoadTexture(map.CoverFilePath);
+                Rect rect = new Rect(0, 0, cover_texture.width, cover_texture.height);
+                Vector2 pivot = new Vector2(0.5f, 0.5f);
+
+                Sprite cover_sprite = Sprite.Create(
+                    cover_texture,
+                    rect,
+                    pivot,
+                    100f 
+                );
+
+                spriteRenderer.sprite = cover_sprite;
+            }
+            else
+            {
+                Debug.LogWarning($"No cover image found for map in folder: {map.MapFolder}");
+                // modify this to default if no image found
+                spriteRenderer.sprite = defaultSprite;
+            }
+
             game_object.transform.SetParent(this.transform, true); // Set Controller to parent of object
 
             selectObjects[indexer] = game_object; 
@@ -71,6 +123,22 @@ public class MapSelector : MonoBehaviour
             indexer++;
         }
         ModifyActiveGameObjects();
+        OnSelectionChanged();
+
+        mainMenuButton.onClick.AddListener(() => {
+            StartCoroutine(AnimateSceneChange(mainMenuSceneName));
+        });
+        selectButton.onClick.AddListener(() => {
+            SelectMap();
+        });
+    }
+
+    public Texture2D LoadTexture(string path)
+    {
+        byte[] fileBytes = File.ReadAllBytes(path);
+        Texture2D tex = new Texture2D(2, 2, TextureFormat.RGBA32, false); // create a new texture (size will be replaced by LoadImage)
+        tex.LoadImage(fileBytes);
+        return tex;
     }
 
     // register input action callbacks
@@ -177,7 +245,10 @@ public class MapSelector : MonoBehaviour
         float startRot = transform.eulerAngles.z;
         float outRot = startRot + direction * edgeBounceAmount;
 
+        // could be more line-efficient by combining both while loops into one and then swapping the lerp targets, but this is more readable
+
         float t = 0f;
+        // bounce out
         while (t < edgeBounceDuration)
         {
             t += Time.deltaTime;
@@ -188,6 +259,7 @@ public class MapSelector : MonoBehaviour
         }
 
         t = 0f;
+        // bounce back
         while (t < edgeBounceDuration)
         {
             t += Time.deltaTime;
@@ -202,7 +274,49 @@ public class MapSelector : MonoBehaviour
     }
 
 
-    public void SelectMap() { }
+    public void SelectMap() { 
+        CrossSceneManager.SelectedMap = UserMaps.Maps[selectedMapIndex];
+        StartCoroutine(AnimateSceneChange(mapPlaySceneName));
+    }
+
+    IEnumerator AnimateSceneChange(string sceneName)
+    // coroutine to animate scene transition
+    {
+        if (isTransitioning) yield break; // early return if already transitioning
+
+        Debug.Log("Starting Scene Transition");
+        isTransitioning = true;
+        yield return new WaitForSeconds(sceneTransitionDelay);
+
+
+        float t = 0f;
+
+
+        // getchild is used on every object to make sure the capsule subobject is moved instead of the empty centered on the selector
+        Vector3[] startPositions = new Vector3[selectObjects.Length];
+        for (int i = 0; i < selectObjects.Length; i++)
+        {
+            startPositions[i] = selectObjects[i].transform.GetChild(0).localPosition;
+        }
+
+        while (t < sceneTransitionDuration)
+        {
+            t += Time.deltaTime;
+            float lerp = Mathf.SmoothStep(0, 1, t / sceneTransitionDuration);
+
+            for (int i = 0; i < selectObjects.Length; i++)
+            {
+                GameObject obj = selectObjects[i];
+            
+                obj.transform.GetChild(0).localPosition = new Vector3(Mathf.Lerp(startPositions[i].x, 
+                                                                      startPositions[i].x - moveCapsuleDistance, 
+                                                                      lerp), 0, 0);
+            }
+
+            yield return null;
+        }
+        SceneManager.LoadScene(sceneName);
+    }
 
 
     public void ModifyActiveGameObjects()
@@ -221,8 +335,29 @@ public class MapSelector : MonoBehaviour
         }
     }
 
+    // called whenever selectedMapIndex is changed, updates images + leaderboard etc.
     void OnSelectionChanged()
     {
-        // handle audio preview
+        string newLeaderboardText = "LEADERBOARD\n";
+        Map selectedMap = UserMaps.Maps[selectedMapIndex];
+
+        if (selectedMap.leaderboard != null)
+        {
+            int leaderboardDisplayCount = Mathf.Min(leaderboardEntryCount, selectedMap.leaderboard.leaderboard.Count);
+            for (int i = 0; i < leaderboardDisplayCount; i++)
+            {
+                LeaderboardEntry entry = selectedMap.leaderboard.leaderboard[i];
+                newLeaderboardText += $"{i + 1}. {entry.playerName} - {entry.score}\n";
+            }
+        }
+        LeaderboardTextField.text = newLeaderboardText;
+        // check if file exists and display default if not
+        rightBigCoverThumbnail.sprite = File.Exists(selectedMap.CoverFilePath) ? Sprite.Create(
+            LoadTexture(selectedMap.CoverFilePath),
+            new Rect(0, 0, LoadTexture(selectedMap.CoverFilePath).width, LoadTexture(selectedMap.CoverFilePath).height),
+            new Vector2(0.5f, 0.5f),
+            100f 
+        ) : defaultSprite;
+
     }
 }
