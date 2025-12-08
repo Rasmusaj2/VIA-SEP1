@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.ComponentModel;
 
 public class MapSelector : MonoBehaviour
 {
@@ -78,6 +79,12 @@ public class MapSelector : MonoBehaviour
     [SerializeField] private AudioClip currentlyPlayingAudio;
     [SerializeField] private Coroutine audioFadeCoroutine;
 
+    [Header("Textures")]
+    [Description("This radius assumes a 1920x1080 and will autoscale from that")] 
+    public float circularTextureRadius = 0.4f;
+    [Description("This size assumes a 1920x1080 and will autoscale from that")] 
+    public float rightCoverImageSize = 400f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -99,17 +106,26 @@ public class MapSelector : MonoBehaviour
             if (File.Exists(map.CoverFilePath))
             {
                 Texture2D cover_texture = LoadTexture(map.CoverFilePath);
-                Rect rect = new Rect(0, 0, cover_texture.width, cover_texture.height);
+                Texture2D circular_texture = MakeTextureCircular(cover_texture);
+
+                Rect rect = new Rect(0, 0, circular_texture.width, circular_texture.height);
                 Vector2 pivot = new Vector2(0.5f, 0.5f);
 
                 Sprite cover_sprite = Sprite.Create(
-                    cover_texture,
+                    circular_texture,
                     rect,
                     pivot,
                     100f 
                 );
 
                 spriteRenderer.sprite = cover_sprite;
+
+                // scale sprite based on screen height
+                float diameter = (circularTextureRadius * 2) * (Screen.height / 1080f);
+                float pixelsPerUnit = cover_sprite.pixelsPerUnit;
+                float textureWorldSize = circular_texture.width / pixelsPerUnit;
+                float scale = diameter / textureWorldSize;
+                spriteRenderer.transform.localScale = new Vector3(scale, scale, 1);
             }
             else
             {
@@ -153,6 +169,31 @@ public class MapSelector : MonoBehaviour
         Texture2D tex = new Texture2D(2, 2, TextureFormat.RGBA32, false); // create a new texture (size will be replaced by LoadImage)
         tex.LoadImage(fileBytes);
         return tex;
+    }
+
+    Texture2D MakeTextureCircular(Texture2D tex) {
+        int size = Mathf.Min(tex.width, tex.height); // force perfect square
+        Texture2D result = new Texture2D(size, size, TextureFormat.RGBA32, false);
+
+        int radius = size / 2;
+        Vector2 center = new Vector2(radius, radius);
+
+        // this is slow there might be a faster way to do this than nested for loops (shaders?)
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                
+                float dist = Vector2.Distance(new Vector2(x, y), center);
+                if (dist <= radius) {
+                    result.SetPixel(x, y, tex.GetPixel(x, y)); // set to original pixel color
+                } else {
+                    result.SetPixel(x, y, new Color(0, 0, 0, 0)); // make transparent
+                }
+            }
+        }
+
+
+        result.Apply();
+        return result;
     }
 
     // register input action callbacks
@@ -326,6 +367,8 @@ public class MapSelector : MonoBehaviour
                                                                       startPositions[i].x - moveCapsuleDistance, 
                                                                       lerp), 0, 0);
             }
+
+            
 
             yield return null;
         }
