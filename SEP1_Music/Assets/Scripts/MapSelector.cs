@@ -128,11 +128,14 @@ public class MapSelector : MonoBehaviour
 
                 // scale sprite based on screen height
                 // should probably have tested this before committing but this only properly scales the image on 1080p screens
-                // TODO: fix scaling for other resolutions
-                float diameter = (circularTextureRadius * 2) * (Screen.height / 1080f);
+                // TODO: fix scaling for other resolutions -- FIXED
+                float heightFraction = circularTextureRadius * 2 / 1080f;
+                float worldUnitsPerPixel = (Camera.main.orthographicSize * 2) / Screen.height;
+                float diamaterWorldUnits = heightFraction * Screen.height * worldUnitsPerPixel;
                 float pixelsPerUnit = cover_sprite.pixelsPerUnit;
-                float textureWorldSize = circular_texture.width / pixelsPerUnit;
-                float scale = diameter / textureWorldSize;
+                float textureWorldSize = circular_texture.height / pixelsPerUnit;
+                float scale = diamaterWorldUnits / textureWorldSize;
+
                 spriteRenderer.transform.localScale = new Vector3(scale, scale, 1);
             }
             else
