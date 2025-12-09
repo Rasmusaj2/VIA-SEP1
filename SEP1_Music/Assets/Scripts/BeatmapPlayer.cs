@@ -1,19 +1,31 @@
-using NUnit.Framework;
-using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+
+public enum HitPhase
+{
+    Attack,
+    Release,
+}
 
 public class BeatmapPlayer : MonoBehaviour
 {
+    [Header("References")]
     public Beatmap beatmap;
-    [SerializeField] private BeatNode[] nodes = new BeatNode[10];
-    public GameObject nodePrefab;
+    public Timeline timeline;
+    public TimelineDisplay timelineDisplay;
+    public NoteSpawner noteSpawner;
 
-    public int currentNodeIndex = 0;
-    public float playtime = 0f;
+    [SerializeField]
+    private Lane[] lanes = new Lane[4];
 
+    void Awake()
+    {
+        for (int i = 0; i < lanes.Length; i++)
+        {
+            lanes[i] = new Lane();
+        }
+    }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (CrossSceneManager.SelectedMap != null)
@@ -27,62 +39,23 @@ public class BeatmapPlayer : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (beatmap == null || beatmap.Nodes == null || beatmap.Nodes.Count == 0)
-        {
-            Debug.LogWarning("No beatmap or nodes to play.");
-            return;
-        }
-
-        // Safety check for currentNodeIndex bounds
-        if (currentNodeIndex < 0) currentNodeIndex = 0;
-
-
-        playtime += Time.deltaTime;
-
-        if (currentNodeIndex >= beatmap.Nodes.Count)
-        {
-            return; // All nodes spawned
-        }
-
-        if (playtime >= beatmap.Nodes[currentNodeIndex].time)
-        {
-            BeatNode node = beatmap.Nodes[currentNodeIndex];
-            if (node != null)
-            {
-                SpawnNode(node);
-            }
-            else
-            {
-                Debug.LogWarning($"BeatNode at index {currentNodeIndex} is null.");
-            }
-
-            currentNodeIndex++;
-        }
+        UpdateNotePositions();
     }
 
-    void SpawnNode(BeatNode node)
-    // Spawns node at appropriate lane position
-    // TODO: Adjust spawn position based on lane and game design
+    private void UpdateNotePositions()
     {
-        Vector3 spawnPosition = Vector3.zero;
-        switch (node.lane)
+        for (int l = 0; l < lanes.Length; l++)
         {
-            case Lane.LeftLane:
-                spawnPosition = new Vector3((float)LaneLocations.LeftLane, 10f, 0f);
-                break;
-            case Lane.LeftMidLane:
-                spawnPosition = new Vector3((float)LaneLocations.LeftMidLane, 10f, 0f);
-                break;
-            case Lane.RightMidLane:
-                spawnPosition = new Vector3((float)LaneLocations.RightLane, 10f, 0f);
-                break;
-            case Lane.RightLane:
-                spawnPosition = new Vector3((float)LaneLocations.RightMidLane, 10f, 0f);
-                break;
+            List<Note> notes = lanes[l].GetNotes();
+            for (int i = 0; i < notes.Count; i++)
+            {
+                Note note = notes[i];
+                timelineDisplay.PositionToTimeline(note.transform, timeline.ToBeats(note.time));
+            }
         }
-        Instantiate(nodePrefab, spawnPosition, Quaternion.identity, transform);
     }
+
+    public void Hit(LaneType lane, HitPhase phase, double time) { }
 }

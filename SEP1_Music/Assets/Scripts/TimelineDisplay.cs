@@ -14,16 +14,6 @@ public class TimelineDisplay : MonoBehaviour
     private List<Transform> barLineTransforms;
     private List<Transform> semiBarLineTransforms;
 
-    private double ToBeats(float displacement)
-    {
-        return 4.0 * (double)displacement / distancePerMeasure;
-    }
-
-    private float ToDisplacement(double beats)
-    {
-        return (float)(0.25 * distancePerMeasure * beats);
-    }
-
     void Awake()
     {
         timeline = GetComponent<Timeline>();
@@ -100,5 +90,23 @@ public class TimelineDisplay : MonoBehaviour
             semiBarLines.Release(semiBarLineTransforms[i].gameObject);
             semiBarLineTransforms.Remove(semiBarLineTransforms[i]);
         }
+    }
+
+    public double ToBeats(float displacement)
+    {
+        return 4.0 * (double)displacement / distancePerMeasure;
+    }
+
+    public float ToDisplacement(double beats)
+    {
+        return (float)(0.25 * distancePerMeasure * beats);
+    }
+
+    public void PositionToTimeline(Transform transform, double beat)
+    {
+        transform.position = new Vector3(
+            transform.position.x,
+            ToDisplacement(beat - timeline.beat),
+            transform.position.z);
     }
 }

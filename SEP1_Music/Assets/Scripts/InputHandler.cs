@@ -15,7 +15,7 @@ public class InputHandler : MonoBehaviour
     public double delayCompensationMilliseconds = 0.0;
 
     [Header("References")]
-    public BeatmapController beatmapController;
+    public BeatmapPlayer beatmapPlayer;
 
     private List<InputActionReference> actionReferences;
 
@@ -43,12 +43,12 @@ public class InputHandler : MonoBehaviour
         {
             if (context.action != actionReferences[i].action) continue;
 
-            Lane lane = (Lane)i;
+            LaneType lane = (LaneType)i;
             HitPhase phase = (HitPhase)(context.phase - InputActionPhase.Performed); // (Performed = 3, Canceled = 4) -> (0, 1)
             double delayCompensationSeconds = 0.001 * delayCompensationMilliseconds;
             double time = context.time - delayCompensationSeconds;
 
-            beatmapController.Hit(lane, phase, time);
+            beatmapPlayer.Hit(lane, phase, time);
         }
     }
 
