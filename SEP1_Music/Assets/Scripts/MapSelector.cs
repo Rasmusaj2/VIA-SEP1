@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.ComponentModel;
+using UnityEngine.Rendering;
 
 public class MapSelector : MonoBehaviour
 {
@@ -77,7 +78,11 @@ public class MapSelector : MonoBehaviour
 
     [Header("Audio Clips")]
     [SerializeField] private AudioClip currentlyPlayingAudio;
+    [SerializeField] private AudioClip targetAudioClip;
     [SerializeField] private Coroutine audioFadeCoroutine;
+    [SerializeField] private Coroutine loadAudioCoroutine;
+    [SerializeField] private float audioFadeTimer = 0f;
+
 
     [Header("Textures")]
     [Description("This radius assumes a 1920x1080 and will autoscale from that")] 
@@ -87,6 +92,8 @@ public class MapSelector : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (musicPreviewSource == null) musicPreviewSource = this.gameObject.AddComponent<AudioSource>();
+
         UserMaps.RefreshMaps();
         selectObjects = new GameObject[UserMaps.Maps.Count];
 
@@ -413,8 +420,15 @@ public class MapSelector : MonoBehaviour
     // called whenever selectedMapIndex is changed, updates images + leaderboard etc.
     void OnSelectionChanged()
     {
+        UpdateLeaderboard();
+        UpdateLargeSprite();
+        HandleAudio();
+    }
+
+    void UpdateLeaderboard()
+    {
         string newLeaderboardText = "LEADERBOARD\n";
-        if (UserMaps.Maps.Count == 0) 
+        if (UserMaps.Maps.Count == 0)
         {
             LeaderboardTextField.text = "NO MAPS AVAILABLE";
             rightBigCoverThumbnail.sprite = defaultSprite;
@@ -433,13 +447,134 @@ public class MapSelector : MonoBehaviour
             }
         }
         LeaderboardTextField.text = newLeaderboardText;
+    }
+    void UpdateLargeSprite()
+    {
+        if (UserMaps.Maps.Count == 0)
+        {
+            rightBigCoverThumbnail.sprite = defaultSprite;
+            return;
+        }
+        Map selectedMap = UserMaps.Maps[selectedMapIndex];
         // check if file exists and display default if not
         rightBigCoverThumbnail.sprite = File.Exists(selectedMap.CoverFilePath) ? Sprite.Create(
             LoadTexture(selectedMap.CoverFilePath),
             new Rect(0, 0, LoadTexture(selectedMap.CoverFilePath).width, LoadTexture(selectedMap.CoverFilePath).height),
             new Vector2(0.5f, 0.5f),
-            100f 
+            100f
         ) : defaultSprite;
+    }
 
+    void HandleAudio()
+    {
+        if (UserMaps.Maps.Count == 0) return;
+
+        Map selectedMap = UserMaps.Maps[selectedMapIndex];
+        string audioPath = selectedMap.AudioFilePath;
+
+        if (audioPath == null) return;
+        if (!File.Exists(audioPath)) StartCrossfadeToClip(null);
+
+        if (loadAudioCoroutine != null)
+        {
+            StopCoroutine(loadAudioCoroutine);
+        }
+        loadAudioCoroutine = StartCoroutine(LoadAndPlayAudio(audioPath));
+    }
+
+    private IEnumerator LoadAndPlayAudio(string filepath)
+    {
+        // for some reason this is like web requests idk what unity is doing
+        string url = "file://" + filepath;
+
+        DownloadHandlerAudioClip handler = new DownloadHandlerAudioClip(url, AudioType.MPEG);
+        handler.streamAudio = false; // has to be set to false as we're working with .mp3 files
+
+        UnityWebRequest www = new UnityWebRequest(url) { downloadHandler = handler};
+        www.disposeDownloadHandlerOnDispose = true;
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError($"Error loading audio clip from {filepath}: {www.error}");
+            yield break;
+        }
+
+        AudioClip clip = handler.audioClip;
+        if (clip == null)
+        {
+            Debug.LogError($"Loaded audio clip is null from {filepath}");
+            yield break;
+        }
+
+        if (UserMaps.Maps[selectedMapIndex].AudioFilePath != filepath)
+        {
+            // selected map has changed while loading audio, discard this clip
+            yield break;
+        }
+
+        targetAudioClip = clip;
+        StartCrossfadeToClip(clip);
+    }
+
+    private void StartCrossfadeToClip(AudioClip newClip)
+    {
+        if (audioFadeCoroutine != null)
+        {
+            StopCoroutine(audioFadeCoroutine);
+        }
+        audioFadeCoroutine = StartCoroutine(CrossfadeToClip(newClip));
+    }
+
+    private IEnumerator CrossfadeToClip(AudioClip newClip)
+    {
+        // TODO: IMPROVE THIS
+        // currently has issues with abrupt stops when switching between clips quickly
+        // furthermore sounds very weird, the fade is not smooth
+        // the stopping clip has a quick jump down and then back up in volume before fading out properly
+        // fading in clip sounds okay 
+
+
+        float t = 0f;
+        
+        AudioSource src = musicPreviewSource;
+        AudioClip oldClip = src.clip;
+        float oldVolume = src.volume;
+
+        // if fading to null (fading out)
+        if (newClip == null)
+        {
+            Debug.Log("Fading out audio");
+            while (t < audioFadeDuration)
+            {
+                t += Time.deltaTime;
+                float lerp = Mathf.SmoothStep(0, 1, t / audioFadeDuration);
+                src.volume = Mathf.Lerp(oldVolume, 0f, lerp);
+                yield return null;
+            }
+            src.clip = null;
+            src.Stop();
+            src.volume = 1f;
+            yield break;
+        }
+
+        AudioSource tempSrc = src;
+        tempSrc.clip = newClip;
+        tempSrc.Play();
+        tempSrc.volume = 0f;
+
+        while (t < audioFadeDuration)
+        {
+            t += Time.deltaTime;
+            float lerp = Mathf.SmoothStep(0, 1, t / audioFadeDuration);
+            tempSrc.volume = Mathf.Lerp(0f, oldVolume, lerp);
+            if (oldClip != null)
+            {
+                src.volume = Mathf.Lerp(oldVolume, 0f, lerp);
+            }
+            yield return null;
+        }
+
+        src.volume = 1f;
     }
 }
