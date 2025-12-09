@@ -82,8 +82,7 @@ public class MapSelector : MonoBehaviour
     [Header("Textures")]
     [Description("This radius assumes a 1920x1080 and will autoscale from that")] 
     public float circularTextureRadius = 0.4f;
-    [Description("This size assumes a 1920x1080 and will autoscale from that")] 
-    public float rightCoverImageSize = 400f;
+    public int circularTextureResolution = 128;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -102,6 +101,13 @@ public class MapSelector : MonoBehaviour
             // Set subelements of map item
             Transform Capsule = game_object.transform.GetChild(0);
             SpriteRenderer spriteRenderer = Capsule.GetChild(0).GetComponent<SpriteRenderer>();
+            Canvas canvas = Capsule.GetChild(1).GetComponent<Canvas>();
+            
+            // handle text displays
+            TMP_Text mapTitleText = canvas.transform.GetChild(0).GetComponent<TMP_Text>();
+            TMP_Text authorText = canvas.transform.GetChild(1).GetComponent<TMP_Text>();
+            mapTitleText.text = map.beatmap.MapName;
+            authorText.text = map.beatmap.Author;
 
             if (File.Exists(map.CoverFilePath))
             {
@@ -121,6 +127,8 @@ public class MapSelector : MonoBehaviour
                 spriteRenderer.sprite = cover_sprite;
 
                 // scale sprite based on screen height
+                // should probably have tested this before committing but this only properly scales the image on 1080p screens
+                // TODO: fix scaling for other resolutions
                 float diameter = (circularTextureRadius * 2) * (Screen.height / 1080f);
                 float pixelsPerUnit = cover_sprite.pixelsPerUnit;
                 float textureWorldSize = circular_texture.width / pixelsPerUnit;
@@ -172,13 +180,18 @@ public class MapSelector : MonoBehaviour
     }
 
     Texture2D MakeTextureCircular(Texture2D tex) {
+        double startTime = Time.realtimeSinceStartupAsDouble;
+        //tex.Reinitialize(circularTextureResolution, circularTextureResolution); // might use this to resize 
         int size = Mathf.Min(tex.width, tex.height); // force perfect square
         Texture2D result = new Texture2D(size, size, TextureFormat.RGBA32, false);
 
         int radius = size / 2;
         Vector2 center = new Vector2(radius, radius);
 
+
         // this is slow there might be a faster way to do this than nested for loops (shaders?)
+        // especially inefficient for large textures, but should be fine for small cover images
+        // could possibly convert all textures to a standard size on load to improve performance (or set a scale of 160x160 or something)
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 
@@ -193,6 +206,7 @@ public class MapSelector : MonoBehaviour
 
 
         result.Apply();
+        Debug.Log($"Made texture circular in {Time.realtimeSinceStartupAsDouble - startTime} seconds");
         return result;
     }
 
@@ -368,7 +382,8 @@ public class MapSelector : MonoBehaviour
                                                                       lerp), 0, 0);
             }
 
-            
+            // this looks bad but something similar could be done for transistions sake
+            // if (sceneName == mapPlaySceneName) rightBigCoverThumbnail.transform.localScale = Vector3.Lerp(Vector3.one, new Vector3(5, 5), lerp);
 
             yield return null;
         }
