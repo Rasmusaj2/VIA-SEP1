@@ -4,11 +4,15 @@ using UnityEngine;
 [RequireComponent(typeof(Timeline))]
 public class TimelineDisplay : MonoBehaviour
 {
-    public int maxBars = 4;
+    [Header("Parameters")]
+    public int maxBars = 8; // Number of bar lines to allocate
     public double distancePerMeasure = 4.0f;
-
+    [Header("Object Pools")]
     public GameObjectPool barLines;
     public GameObjectPool semiBarLines;
+    [Header("Display Limits")]
+    public float lowerLimit = -8.0f;
+    public float upperLimit = 8.0f;
 
     private Timeline timeline;
     private List<Transform> barLineTransforms;
@@ -29,11 +33,8 @@ public class TimelineDisplay : MonoBehaviour
 
     void Update()
     {
-        float yMin = -5.0f;
-        float yMax = 5.0f;
-
-        int startingBeat = (int)(timeline.beat + ToBeats(yMin));
-        int endingBeat = (int)(timeline.beat + ToBeats(yMax));
+        int startingBeat = (int)(timeline.beat + ToBeats(lowerLimit));
+        int endingBeat = (int)(timeline.beat + ToBeats(upperLimit));
         int beatsAmount = endingBeat - startingBeat + 1;
 
         int bi = 0;
@@ -45,50 +46,41 @@ public class TimelineDisplay : MonoBehaviour
 
             if (beat % timeline.beatsPerMeasure == 0)
             {
-                if (bi == barLineTransforms.Count)
-                {
-                    GameObject barLine;
-                    barLine = barLines.Acquire();
-                    barLineTransforms.Add(barLine.transform);
-                    b = barLine.transform;
-                }
-                else
-                {
-                    b = barLineTransforms[bi];
-                }
-
-                bi++;
+                b = GetBarLine(barLines, barLineTransforms, bi++);
             }
             else
             {
-                if (sbi == semiBarLineTransforms.Count)
-                {
-                    GameObject barLine;
-                    barLine = semiBarLines.Acquire();
-                    semiBarLineTransforms.Add(barLine.transform);
-                    b = barLine.transform;
-                }
-                else
-                {
-                    b = semiBarLineTransforms[sbi];
-                }
-
-                sbi++;
+                b = GetBarLine(semiBarLines, semiBarLineTransforms, sbi++);
             }
 
             b.position = new Vector3(b.position.x, ToDisplacement(beat - timeline.beat), b.position.z);
         }
 
-        for (int i = bi; i < barLineTransforms.Count; i++)
-        {
-            barLines.Release(barLineTransforms[i].gameObject);
-            barLineTransforms.Remove(barLineTransforms[i]);
-        }
+        ReleaseBarLines(barLines, barLineTransforms, bi);
+        ReleaseBarLines(semiBarLines, semiBarLineTransforms, sbi);
+    }
 
-        for (int i = sbi; i < semiBarLineTransforms.Count; i++)
+    private Transform GetBarLine(GameObjectPool pool, List<Transform> transforms, int index)
+    {
+        if (index == transforms.Count)
         {
-            semiBarLines.Release(semiBarLineTransforms[i].gameObject);
-            semiBarLineTransforms.Remove(semiBarLineTransforms[i]);
+            GameObject barLine;
+            barLine = pool.Acquire();
+            transforms.Add(barLine.transform);
+            return barLine.transform;
+        }
+        else
+        {
+            return transforms[index];
+        }
+    }
+
+    private void ReleaseBarLines(GameObjectPool pool, List<Transform> transforms, int startIndex)
+    {
+        for (int i = startIndex; i < transforms.Count; i++)
+        {
+            pool.Release(transforms[i].gameObject);
+            transforms.Remove(transforms[i]);
         }
     }
 
