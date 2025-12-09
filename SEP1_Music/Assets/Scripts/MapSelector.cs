@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.ComponentModel;
 using UnityEngine.Rendering;
+using UnityEngine.Audio;
 
 public class MapSelector : MonoBehaviour
 {
@@ -25,7 +26,11 @@ public class MapSelector : MonoBehaviour
 
     [Header("Audio")]
     public float audioFadeDuration = 1.0f;
-    public AudioSource musicPreviewSource;
+    public AudioMixerGroup mixer;
+    [SerializeField] private AudioSource musicSourceA;
+    [SerializeField] private AudioSource musicSourceB;
+    private AudioSource activeSource;
+    private AudioSource inactiveSource;
 
     [Header("Input Actions")]
     public InputActionReference upAction;
@@ -92,7 +97,17 @@ public class MapSelector : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (musicPreviewSource == null) musicPreviewSource = this.gameObject.AddComponent<AudioSource>();
+        if (musicSourceA == null) musicSourceA = gameObject.AddComponent<AudioSource>();
+        if (musicSourceB == null) musicSourceB = gameObject.AddComponent<AudioSource>();
+
+        if (mixer != null)
+        {
+            musicSourceA.outputAudioMixerGroup = mixer;
+            musicSourceB.outputAudioMixerGroup = mixer;
+        }
+
+        activeSource = musicSourceA;
+        inactiveSource = musicSourceB;
 
         UserMaps.RefreshMaps();
         selectObjects = new GameObject[UserMaps.Maps.Count];
@@ -114,7 +129,7 @@ public class MapSelector : MonoBehaviour
             TMP_Text mapTitleText = canvas.transform.GetChild(0).GetComponent<TMP_Text>();
             TMP_Text authorText = canvas.transform.GetChild(1).GetComponent<TMP_Text>();
             mapTitleText.text = map.beatmap.MapName;
-            authorText.text = map.beatmap.Author;
+            authorText.text = map.beatmap.Artist;
 
             if (File.Exists(map.CoverFilePath))
             {
@@ -422,7 +437,7 @@ public class MapSelector : MonoBehaviour
     {
         UpdateLeaderboard();
         UpdateLargeSprite();
-        HandleAudio();
+        HandleAudio(); 
     }
 
     void UpdateLeaderboard()
@@ -467,6 +482,8 @@ public class MapSelector : MonoBehaviour
 
     void HandleAudio()
     {
+        // im using a custom audio system here instead of the AudioManager because i want to be able to stream audio from disk without loading the entire clip into memory at once
+        // furthermore audio crossfade is desired when switching between map selections and its not ideal from AudioManager
         if (UserMaps.Maps.Count == 0) return;
 
         Map selectedMap = UserMaps.Maps[selectedMapIndex];
@@ -484,97 +501,75 @@ public class MapSelector : MonoBehaviour
 
     private IEnumerator LoadAndPlayAudio(string filepath)
     {
-        // for some reason this is like web requests idk what unity is doing
         string url = "file://" + filepath;
 
-        DownloadHandlerAudioClip handler = new DownloadHandlerAudioClip(url, AudioType.MPEG);
-        handler.streamAudio = false; // has to be set to false as we're working with .mp3 files
-
-        UnityWebRequest www = new UnityWebRequest(url) { downloadHandler = handler};
-        www.disposeDownloadHandlerOnDispose = true;
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
+        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
         {
-            Debug.LogError($"Error loading audio clip from {filepath}: {www.error}");
-            yield break;
-        }
+            DownloadHandlerAudioClip dh = (DownloadHandlerAudioClip)www.downloadHandler;
+            dh.streamAudio = true; // keep as true to avoid freezing process when reading file
 
-        AudioClip clip = handler.audioClip;
-        if (clip == null)
-        {
-            Debug.LogError($"Loaded audio clip is null from {filepath}");
-            yield break;
-        }
+            yield return www.SendWebRequest();
 
-        if (UserMaps.Maps[selectedMapIndex].AudioFilePath != filepath)
-        {
-            // selected map has changed while loading audio, discard this clip
-            yield break;
-        }
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error loading audio " + www.error);
+                yield break;
+            }
 
-        targetAudioClip = clip;
-        StartCrossfadeToClip(clip);
+            AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+
+            if (clip == null)
+            {
+                Debug.Log("Loaded audio is null");
+                yield break;
+            }
+
+            // selection changed mid load, avoid playing
+            if (UserMaps.Maps[selectedMapIndex].AudioFilePath != filepath)
+                yield break;
+
+            targetAudioClip = clip;
+            StartCrossfadeToClip(clip);
+        }
     }
+
 
     private void StartCrossfadeToClip(AudioClip newClip)
     {
-        if (audioFadeCoroutine != null)
-        {
-            StopCoroutine(audioFadeCoroutine);
-        }
+        if (audioFadeCoroutine != null) StopCoroutine(audioFadeCoroutine);
         audioFadeCoroutine = StartCoroutine(CrossfadeToClip(newClip));
     }
 
     private IEnumerator CrossfadeToClip(AudioClip newClip)
     {
-        // TODO: IMPROVE THIS
-        // currently has issues with abrupt stops when switching between clips quickly
-        // furthermore sounds very weird, the fade is not smooth
-        // the stopping clip has a quick jump down and then back up in volume before fading out properly
-        // fading in clip sounds okay 
-
-
+        // TODO: Fix issues where rapid selection to an empty clip causes audio to permanently be low volume
         float t = 0f;
-        
-        AudioSource src = musicPreviewSource;
-        AudioClip oldClip = src.clip;
-        float oldVolume = src.volume;
 
-        // if fading to null (fading out)
-        if (newClip == null)
-        {
-            Debug.Log("Fading out audio");
-            while (t < audioFadeDuration)
-            {
-                t += Time.deltaTime;
-                float lerp = Mathf.SmoothStep(0, 1, t / audioFadeDuration);
-                src.volume = Mathf.Lerp(oldVolume, 0f, lerp);
-                yield return null;
-            }
-            src.clip = null;
-            src.Stop();
-            src.volume = 1f;
-            yield break;
-        }
+        inactiveSource.clip = newClip;
+        if (newClip != null) inactiveSource.Play();
 
-        AudioSource tempSrc = src;
-        tempSrc.clip = newClip;
-        tempSrc.Play();
-        tempSrc.volume = 0f;
+        float startVolumeA = activeSource.volume;
+        inactiveSource.volume = 0f;
 
         while (t < audioFadeDuration)
         {
             t += Time.deltaTime;
             float lerp = Mathf.SmoothStep(0, 1, t / audioFadeDuration);
-            tempSrc.volume = Mathf.Lerp(0f, oldVolume, lerp);
-            if (oldClip != null)
-            {
-                src.volume = Mathf.Lerp(oldVolume, 0f, lerp);
-            }
+
+            activeSource.volume = Mathf.Lerp(startVolumeA, 0f, lerp);
+            inactiveSource.volume = Mathf.Lerp(0f, startVolumeA, lerp);
+
             yield return null;
         }
 
-        src.volume = 1f;
+        activeSource.Stop();
+        activeSource.volume = 1f;
+
+        // swap references
+        AudioSource temp = activeSource;
+        activeSource = inactiveSource;
+        inactiveSource = temp;
+
+        inactiveSource.clip = null; // clean old clip
     }
 }
