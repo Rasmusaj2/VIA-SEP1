@@ -6,10 +6,11 @@ public class InfinitePlayer : MonoBehaviour
     public float playtime = 0f;
     public GameObject nodePrefab;
     public int health = 3;
+    public NoteSpawner noteSpawner;
     private bool hasLost;
 
     [Header("Lane Settings")]
-    [SerializeField] private Lanes lastLane;
+    [SerializeField] private LaneType lastLane;
     [SerializeField] private float lastNodeTime;
 
     [Header("Speed Settings")]
@@ -42,46 +43,20 @@ public class InfinitePlayer : MonoBehaviour
             playtime += Time.deltaTime;
             if (playtime - lastNodeTime >= SpawnInterval)
             {
-
                 // Randomly select a lane different from the last one
-                Lanes newLane;
+                LaneType newLane;
                 do
                 {
-                    newLane = (Lanes)Random.Range(0, 4); // 4 lanes, 0 to 3 (can technically get stuck in a loop but psuedo-random should make it unlikely)
+                    newLane = (LaneType)Random.Range(0, 4); // 4 lanes, 0 to 3 (can technically get stuck in a loop but psuedo-random should make it unlikely)
                 } while (newLane == lastLane);
 
-                BeatNode newNode = new BeatNode(playtime, newLane);
-
-                SpawnNode(newNode);
+                noteSpawner.SpawnNote(newLane, playtime); // TODO: Make use of a timeline object.
                 lastLane = newLane;
                 lastNodeTime = playtime;
             }
             CalculateNewSpeed();
             CalculateNewSpawnInterval();
         //}
-    }
-
-    void SpawnNode(BeatNode node)
-    // Spawns node at appropriate lane position
-    // TODO: Adjust spawn position based on lane and game design
-    {
-        Vector3 spawnPosition = Vector3.zero;
-        switch (node.lane)
-        {
-            case Lanes.LeftLane:
-                spawnPosition = new Vector3((float)LaneLocations.LeftLane, 10f, 0f);
-                break;
-            case Lanes.LeftMidLane:
-                spawnPosition = new Vector3((float)LaneLocations.LeftMidLane, 10f, 0f);
-                break;
-            case Lanes.RightMidLane:
-                spawnPosition = new Vector3((float)LaneLocations.RightLane, 10f, 0f);
-                break;
-            case Lanes.RightLane:
-                spawnPosition = new Vector3((float)LaneLocations.RightMidLane, 10f, 0f);
-                break;
-        }
-        Instantiate(nodePrefab, spawnPosition, Quaternion.identity, transform);
     }
 
     void CalculateNewSpawnInterval()

@@ -1,29 +1,7 @@
-using NUnit.Framework;
 using UnityEngine;
 using System;
 using System.IO;
 using System.Collections.Generic;
-using UnityEditorInternal;
-
-[Serializable]
-public enum Lanes
-{
-    LeftLane,
-    LeftMidLane,
-    RightMidLane,
-    RightLane
-}
-
-// Modify to reposition lanes if needed
-[Serializable]
-public enum LaneLocations
-{
-    LeftLane = -3,
-    LeftMidLane = -1,
-    RightMidLane = 1,
-    RightLane = 3
-}
-
 
 // SERIALIZED FIELDS CANNOT BE PROPERTIES, MUST BE PUBLIC FIELDS OR [SERIALIZEFIELD] PRIVATE FIELDS
 
@@ -31,8 +9,8 @@ public enum LaneLocations
 public class BeatNode
 {
     public float time;
-    public Lanes lane;
-    public BeatNode(float time, Lanes lane)
+    public LaneType lane;
+    public BeatNode(float time, LaneType lane)
     {
         this.time = time;
         this.lane = lane;

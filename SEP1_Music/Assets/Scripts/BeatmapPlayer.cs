@@ -1,88 +1,109 @@
-using NUnit.Framework;
-using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+
+public enum HitPhase
+{
+    Attack,
+    Release,
+}
 
 public class BeatmapPlayer : MonoBehaviour
 {
+    [Header("References")]
     public Beatmap beatmap;
-    [SerializeField] private BeatNode[] nodes = new BeatNode[10];
-    public GameObject nodePrefab;
+    public Timeline timeline;
+    public TimelineDisplay timelineDisplay;
+    public NoteSpawner noteSpawner;
 
-    public int currentNodeIndex = 0;
-    public float playtime = 0f;
+    [SerializeField]
+    private Lane[] lanes = new Lane[4];
 
+    private double nextNoteBeat = 32.0;
+    private float notesSpawnHeight = 5.0f;
+    private float notesDestroyHeight = -5.0f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        lanes = new Lane[4];
+
+        for (int i = 0; i < lanes.Length; i++)
+        {
+            lanes[i] = new Lane();
+        }
+    }
+
     void Start()
     {
-        if (CrossSceneManager.SelectedMap != null)
-        {
-            beatmap = CrossSceneManager.SelectedMap.beatmap;
-            Debug.Log($"Loaded beatmap: {beatmap.MapName} with {beatmap.Nodes.Count} nodes.");
-        }
-        else
-        {
-            Debug.LogError("No beatmap selected in CrossSceneManager.");
-        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (beatmap == null || beatmap.Nodes == null || beatmap.Nodes.Count == 0)
         {
-            Debug.LogWarning("No beatmap or nodes to play.");
-            return;
-        }
-
-        // Safety check for currentNodeIndex bounds
-        if (currentNodeIndex < 0) currentNodeIndex = 0;
-
-
-        playtime += Time.deltaTime;
-
-        if (currentNodeIndex >= beatmap.Nodes.Count)
-        {
-            return; // All nodes spawned
-        }
-
-        if (playtime >= beatmap.Nodes[currentNodeIndex].time)
-        {
-            BeatNode node = beatmap.Nodes[currentNodeIndex];
-            if (node != null)
+            float height = timelineDisplay.ToDisplacement(nextNoteBeat - timeline.beat);
+            while (height <= notesSpawnHeight)
             {
-                SpawnNode(node);
-            }
-            else
-            {
-                Debug.LogWarning($"BeatNode at index {currentNodeIndex} is null.");
-            }
+                SpawnNote((LaneType)Random.Range(0, 4), nextNoteBeat);
+                Debug.Log(nextNoteBeat);
+                nextNoteBeat += 0.25;
 
-            currentNodeIndex++;
+                height = timelineDisplay.ToDisplacement(nextNoteBeat - timeline.beat);
+                Debug.Log(height);
+            }
         }
+
+        UpdateNotePositions();
+        RemoveDeadNotes();
     }
 
-    void SpawnNode(BeatNode node)
-    // Spawns node at appropriate lane position
-    // TODO: Adjust spawn position based on lane and game design
+    private Note SpawnNote(LaneType laneType, double beat)
     {
-        Vector3 spawnPosition = Vector3.zero;
-        switch (node.lane)
-        {
-            case Lanes.LeftLane:
-                spawnPosition = new Vector3((float)LaneLocations.LeftLane, 10f, 0f);
-                break;
-            case Lanes.LeftMidLane:
-                spawnPosition = new Vector3((float)LaneLocations.LeftMidLane, 10f, 0f);
-                break;
-            case Lanes.RightMidLane:
-                spawnPosition = new Vector3((float)LaneLocations.RightLane, 10f, 0f);
-                break;
-            case Lanes.RightLane:
-                spawnPosition = new Vector3((float)LaneLocations.RightMidLane, 10f, 0f);
-                break;
-        }
-        Instantiate(nodePrefab, spawnPosition, Quaternion.identity, transform);
+        Debug.Log("Index: " + (int)laneType);
+        Debug.Log(lanes.Length);
+        Lane lane = lanes[(int)laneType];
+        Note note = noteSpawner.SpawnNote(laneType, beat);
+        lane.AddNote(note);
+
+        return note;
     }
+
+    private void DespawnNote(LaneType laneType)
+    {
+        Lane lane = lanes[(int)laneType];
+        Note note = lane.GetFirstNote();
+        noteSpawner.DespawnNote(note);
+        lane.RemoveNote();
+    }
+
+    private void UpdateNotePositions()
+    {
+        for (int l = 0; l < lanes.Length; l++)
+        {
+            List<Note> notes = lanes[l].GetNotes();
+            for (int i = 0; i < notes.Count; i++)
+            {
+                Note note = notes[i];
+                timelineDisplay.PositionToTimeline(note.transform, note.beat);
+            }
+        }
+    }
+
+    private void RemoveDeadNotes()
+    {
+        for (int l = 0; l < lanes.Length; l++)
+        {
+            List<Note> notes = lanes[l].GetNotes();
+            // Iterate in reverse order as we are removing notes
+            for (int i = notes.Count - 1; i >= 0; i--)
+            {
+                Note note = notes[i];
+                float height = timelineDisplay.ToDisplacement(note.beat - timeline.beat);
+                if (height < notesDestroyHeight)
+                {
+                    DespawnNote((LaneType)l);
+                }
+            }
+        }
+    }
+
+    public void Hit(LaneType lane, HitPhase phase, double time) { }
 }
