@@ -21,6 +21,19 @@ public class Lane
         return notes[0];
     }
 
+    public void AddNote(Note note)
+    {
+        notes.Add(note);
+    }
+
+    public Note RemoveNote()
+    {
+        Note removing = notes[0];
+        notes.RemoveAt(0);
+
+        return removing;
+    }
+
     public List<Note> GetNotes()
     {
         return notes;

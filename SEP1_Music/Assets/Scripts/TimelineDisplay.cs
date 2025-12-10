@@ -13,6 +13,7 @@ public class TimelineDisplay : MonoBehaviour
     [Header("Display Limits")]
     public float lowerLimit = -8.0f;
     public float upperLimit = 8.0f;
+    public Transform playhead;
 
     private Timeline timeline;
     private List<Transform> barLineTransforms;
@@ -33,8 +34,9 @@ public class TimelineDisplay : MonoBehaviour
 
     void Update()
     {
-        int startingBeat = (int)(timeline.beat + ToBeats(lowerLimit));
-        int endingBeat = (int)(timeline.beat + ToBeats(upperLimit));
+        float origin = playhead.position.y;
+        int startingBeat = (int)(timeline.beat + ToBeats(lowerLimit - origin));
+        int endingBeat = (int)(timeline.beat + ToBeats(upperLimit - origin));
         int beatsAmount = endingBeat - startingBeat + 1;
 
         int bi = 0;
@@ -91,7 +93,9 @@ public class TimelineDisplay : MonoBehaviour
 
     public float ToDisplacement(double beats)
     {
-        return (float)(0.25 * distancePerMeasure * beats);
+        float origin = playhead.position.y;
+        float offset = (float)(0.25 * distancePerMeasure * beats);
+        return origin + offset;
     }
 
     public void PositionToTimeline(Transform transform, double beat)

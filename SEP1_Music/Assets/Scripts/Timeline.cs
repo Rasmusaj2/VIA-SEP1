@@ -20,12 +20,12 @@ public class Timeline : MonoBehaviour
         // thus the start of the audio system). Hence we read the time once when the
         // timeline starts, and then measure all timeline-related timings against this
         // starting time
-        startTime = AudioSettings.dspTime;
+        startTime = Time.realtimeSinceStartupAsDouble;
     }
 
     void Update()
     {
-        time = AudioSettings.dspTime - startTime;
+        time = Time.realtimeSinceStartupAsDouble - startTime;
         beat = ToBeats(time);
     }
     

@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    public double time = 0.0;
-
-    void Update()
-    {
-
-    }
+    public double beat = 0.0;
+    public LaneType laneType;
 }

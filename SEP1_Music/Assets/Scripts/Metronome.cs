@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Metronome : MonoBehaviour
@@ -39,7 +40,7 @@ public class Metronome : MonoBehaviour
             // in order for the system to have enough to prepare the playback at the specified time.
             // This may involve opening buffering a streamed file and should therefore take any
             // worst-case delay into account.
-            int beat = (int)(timeline.ToBeats(nextEventTime));
+            int beat = (int)Math.Round(timeline.ToBeats(nextEventTime)); // Round to the nearest beat
             int subdivision = beat % timeline.beatsPerMeasure;
             // Either load a sound for the first beat or a sound for the other beats,
             // depending on the current subdivision within the measure.
@@ -51,6 +52,8 @@ public class Metronome : MonoBehaviour
             audioSources[source].PlayScheduled(scheduledTime);
             // Cycle between audio sources so that the loading process of one does not interfere with the others
             source = (source + 1) % audioSources.Length;
+
+            Debug.Log($"Scheduled source {source} to start at time {scheduledTime} (beat {beat})");
 
             // Place the next event on the next whole beat from here
             nextEventTime = timeline.ToSeconds(beat + 1.0);
