@@ -8,6 +8,16 @@ using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
+    public enum MusicNode
+    {
+        None,
+        Menu,
+        Game,
+        Infinity
+    }
+
+    public MusicNode currentMode = MusicNode.None;
+
     [SerializeField] private float crossfadeTime = 1f;
 
     public static AudioManager Instance;
@@ -42,9 +52,11 @@ public class AudioManager : MonoBehaviour
     private double songStartDspTime;
     private bool songIsPlaying = false;
 
-    [Header("JSON Files")]
-    private List<AudioClip> loadedSongs = new List<AudioClip>();
+    [Header("Music Playlist")]
+    public List<AudioClip> playlist = new List<AudioClip>();
     private int currentSongIndex = 0;
+
+    public bool allowPlaylistRotation = true;
 
     private void Awake()
     {
@@ -55,15 +67,31 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject); 
+            Destroy(gameObject);
+            return;
+        }
+
+        if (musicSources == null || musicSources.Length < 2)
+            musicSources = new AudioSource[2];
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (musicSources[i] == null)
+            {
+                AudioSource newSource = gameObject.AddComponent<AudioSource>();
+                newSource.playOnAwake = false;
+                newSource.loop = false;
+                musicSources[i] = newSource;
+            }
         }
     }
-
+    
     private void Update()
     {
-        if (loadedSongs.Count > 0 && IsSongFinished())
+        if (currentMode == MusicNode.Infinity && playlist.Count > 0 
+            && songIsPlaying && IsSongFinished())
         {
-            PlayNextSong();
+            PlayRandomSong();
         }
     }
 
@@ -81,38 +109,67 @@ public class AudioManager : MonoBehaviour
     public void StartSongRotation()
     {
         currentSongIndex = 0;
-        CrossfadeTo(loadedSongs[currentSongIndex]);
+        CrossfadeTo(playlist[currentSongIndex]);
     }
 
-    public void PlayNextSong()
+    public void PlayRandomSong()
     {
-        currentSongIndex++;
+        // Debug.Log("PlayRandomSong() Called");
 
-        if (currentSongIndex >= loadedSongs.Count)
-            currentSongIndex = 0;
+        if (playlist.Count == 0)
+        {
+            // Debug.Log("Playlist is empty");
+            return;
+        }
 
-        CrossfadeTo(loadedSongs[currentSongIndex]);
+        int newIndex = Random.Range(0, playlist.Count);
+
+        currentSongIndex = newIndex;
+
+        CrossfadeTo(playlist[currentSongIndex]);
+    }
+
+    public void PlayLoopSong(AudioClip clip)
+    {
+        currentMode = MusicNode.Menu;
+
+        Active.loop = true;
+        Active.clip = clip;
+        Active.volume = 1f;
+        Active.Play();
+
+        songIsPlaying = true;
     }
 
     public void CrossfadeTo(AudioClip clip)
     {
-        Inactive.clip = clip;
-        Inactive.volume = 0f;
+        // Debug.Log("CrossfadeTo called");
+
+        AudioSource newSource = Inactive;
+        newSource.clip = clip;
+        newSource.volume = 0f;
 
         double startTime = AudioSettings.dspTime + 0.010f;
-        Inactive.PlayScheduled(startTime);
+        newSource.PlayScheduled(startTime);
+
+        songStartDspTime = startTime;
 
         StartCoroutine(CrossfadeRoutine(crossfadeTime));
     }
 
     public void AddSong(AudioClip clip)
     {
-        loadedSongs.Add(clip);
+        playlist.Add(clip);
     }
 
     public bool IsSongFinished()
     {
-        return !Active.isPlaying;
+        if (Active.clip == null)
+            return false;
+
+        double timeSinceStart = AudioSettings.dspTime - songStartDspTime;
+
+        return timeSinceStart >= Active.clip.length;
     }
 
     public void ResumeSong()
@@ -145,29 +202,34 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private IEnumerator CrossfadeRoutine(float fadeDuration)
+    private IEnumerator CrossfadeRoutine(float duration)
     {
-        float currentTime = 0f;
+        float t = 0f;
 
-        float activeStart = 1f;
-        float activeEnd = 0f;
+        AudioSource oldSource = Active;
+        AudioSource newSource = Inactive;
 
-        float inactiveStart = 0f;
-        float inactiveEnd = 1f;
-
-        while (currentTime < fadeDuration)
+        while (t < duration)
         {
-            currentTime += Time.deltaTime;
+            t += Time.deltaTime;
 
-            float progress = currentTime / fadeDuration;
+            float progress = t / duration;
 
-            Active.volume = activeStart + (activeEnd - activeStart) * progress;
-            Inactive.volume = inactiveStart + (inactiveEnd - inactiveStart) * progress;
+            oldSource.volume = Mathf.Lerp(1f, 0f, progress);
+            newSource.volume = Mathf.Lerp(0f, 1f, progress);
 
             yield return null;
         }
-        Active.volume = 1f;
-        Inactive.volume = 0f;
-        musicSources[inactiveIndex].Stop();
+
+        oldSource.volume = 0f;
+        newSource.volume = 1f;
+
+        oldSource.Stop();
+
+        activeIndex = inactiveIndex;
+
+        songStartDspTime = AudioSettings.dspTime;
+
+        songIsPlaying = true;
     } 
 }
