@@ -46,7 +46,7 @@ public class Metronome : MonoBehaviour
             // depending on the current subdivision within the measure.
             AudioClip clip = subdivision == 0 ? beatSoundClip : semiBeatSoundClip;
             // Calculate the time to schedule the clip, and apply any audio latency compensation
-            double scheduledTime = timeline.ToRealTime(nextEventTime) - audioDelayCompensationSeconds;
+            double scheduledTime = timeline.ToAudioTime(nextEventTime) - audioDelayCompensationSeconds;
 
             audioSources[source].clip = clip;
             audioSources[source].PlayScheduled(scheduledTime);

@@ -9,23 +9,28 @@ public class Timeline : MonoBehaviour
     public double beatsPerMinute = 128;
 
     [Header("Time")]
-    public double startTime;
+    public double realStartTime;
+    public double audioStartTime;
     public double time = 0.0; // Time since the start of the timeline
     public double beat = 0.0; // Also provide the time in number of beats, for easier sync with music
 
     void Awake()
     {
-        // The current time of the audio system can be at any value when the timeline
-        // starts (it'll typically be the time since the start of the application, and
-        // thus the start of the audio system). Hence we read the time once when the
+    }
+
+    void Start()
+    {
+        // The current time since the application start can be at any value when
+        // the timeline starts. Hence we read the time once when the
         // timeline starts, and then measure all timeline-related timings against this
         // starting time
-        startTime = Time.realtimeSinceStartupAsDouble;
+        realStartTime = Time.realtimeSinceStartupAsDouble;
+        audioStartTime = AudioSettings.dspTime;
     }
 
     void Update()
     {
-        time = Time.realtimeSinceStartupAsDouble - startTime;
+        time = Time.realtimeSinceStartupAsDouble - realStartTime;
         beat = ToBeats(time);
     }
     
@@ -42,9 +47,16 @@ public class Timeline : MonoBehaviour
     }
 
     // Convert a time since the timeline started into the real time relative
-    // to the audio system. Use this to schedule sound effects to exact times
+    // to the start of the application. Use this to compare with input timings
     public double ToRealTime(double time)
     {
-        return startTime + time;
+        return realStartTime + time;
+    }
+
+    // Convert a time since the timeline started into the real time relative
+    // to the audio system. Use this to schedule sound effects to exact times
+    public double ToAudioTime(double time)
+    {
+        return audioStartTime + time;
     }
 }

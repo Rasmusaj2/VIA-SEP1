@@ -1,3 +1,4 @@
+using Math = System.Math;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,8 @@ public class BeatmapPlayer : MonoBehaviour
     [SerializeField]
     private Lane[] lanes = new Lane[4];
 
-    private double nextNoteBeat = 32.0;
+    private double noteHitThreshold = 0.15;
+    private double nextNoteBeat = 0.0;
     private float notesSpawnHeight = 5.0f;
     private float notesDestroyHeight = -5.0f;
 
@@ -43,11 +45,9 @@ public class BeatmapPlayer : MonoBehaviour
             while (height <= notesSpawnHeight)
             {
                 SpawnNote((LaneType)Random.Range(0, 4), nextNoteBeat);
-                Debug.Log(nextNoteBeat);
-                nextNoteBeat += 0.25;
+                nextNoteBeat += 1.0;
 
                 height = timelineDisplay.ToDisplacement(nextNoteBeat - timeline.beat);
-                Debug.Log(height);
             }
         }
 
@@ -57,8 +57,6 @@ public class BeatmapPlayer : MonoBehaviour
 
     private Note SpawnNote(LaneType laneType, double beat)
     {
-        Debug.Log("Index: " + (int)laneType);
-        Debug.Log(lanes.Length);
         Lane lane = lanes[(int)laneType];
         Note note = noteSpawner.SpawnNote(laneType, beat);
         lane.AddNote(note);
@@ -66,12 +64,14 @@ public class BeatmapPlayer : MonoBehaviour
         return note;
     }
 
-    private void DespawnNote(LaneType laneType)
+    private void DespawnNote(LaneType laneType, Note note)
     {
         Lane lane = lanes[(int)laneType];
-        Note note = lane.GetFirstNote();
+        if (lane.GetNotesCount() == 0)
+            return;
+
         noteSpawner.DespawnNote(note);
-        lane.RemoveNote();
+        lane.RemoveNote(note);
     }
 
     private void UpdateNotePositions()
@@ -99,11 +99,44 @@ public class BeatmapPlayer : MonoBehaviour
                 float height = timelineDisplay.ToDisplacement(note.beat - timeline.beat);
                 if (height < notesDestroyHeight)
                 {
-                    DespawnNote((LaneType)l);
+                    DespawnNote((LaneType)l, note);
                 }
             }
         }
     }
 
-    public void Hit(LaneType lane, HitPhase phase, double time) { }
+    private Note GetTargetNote(LaneType laneType)
+    {
+        Lane lane = lanes[(int)laneType];
+        for (int i = 0; i < lane.GetNotesCount(); i++)
+        {
+            Note note = lane.GetNotes()[i];
+            double noteTime = timeline.ToSeconds(note.beat);
+            if (noteTime + noteHitThreshold > timeline.time)
+            {
+                return note;
+            }
+        }
+
+        return null;
+    }
+
+    public void Hit(LaneType laneType, HitPhase phase, double time)
+    {
+        if (phase != HitPhase.Attack)
+            return;
+
+        Note note = GetTargetNote(laneType);
+        if (note == null)
+            return;
+
+        double noteTime = timeline.ToSeconds(note.beat);
+        double hitTime = time - timeline.realStartTime;
+
+        Debug.Log(hitTime - noteTime);
+        if (Math.Abs(hitTime - noteTime) < noteHitThreshold)
+        {
+            DespawnNote(laneType, note);
+        }
+    }
 }
