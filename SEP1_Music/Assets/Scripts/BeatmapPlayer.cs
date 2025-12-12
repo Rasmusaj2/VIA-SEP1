@@ -15,9 +15,12 @@ public class BeatmapPlayer : MonoBehaviour
     public Timeline timeline;
     public TimelineDisplay timelineDisplay;
     public NoteSpawner noteSpawner;
+    public Transform hitEffectContainer;
 
     [SerializeField]
     private Lane[] lanes = new Lane[4];
+
+    private ParticleSystem[] hitEffects = new ParticleSystem[4];
 
     private double noteHitThreshold = 0.15;
     private double nextNoteBeat = 0.0;
@@ -36,6 +39,10 @@ public class BeatmapPlayer : MonoBehaviour
 
     void Start()
     {
+        for (int i = 0; i < lanes.Length; i++)
+        {
+            hitEffects[i] = hitEffectContainer.GetChild(i).GetComponent<ParticleSystem>();
+        }
     }
 
     void Update()
@@ -125,6 +132,9 @@ public class BeatmapPlayer : MonoBehaviour
     {
         if (phase != HitPhase.Attack)
             return;
+
+        ParticleSystem particle = hitEffects[(int)laneType];
+        particle.Play();
 
         Note note = GetTargetNote(laneType);
         if (note == null)

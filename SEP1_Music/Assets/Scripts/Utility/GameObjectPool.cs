@@ -42,6 +42,11 @@ public class GameObjectPool : MonoBehaviour
         poolSize = newPoolSize;
     }
 
+    public int GetSize()
+    {
+        return poolSize;
+    }
+
     // Activates an object from the pool, and returns it. Returns null if the pool is empty (i.e. zero inactive objects)
     public GameObject Acquire()
     {
