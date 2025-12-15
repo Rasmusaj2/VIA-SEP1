@@ -43,7 +43,7 @@ public class BeatmapPlayer : MonoBehaviour
             hitEffects[i] = hitEffectContainer.GetChild(i).GetComponent<ParticleSystem>();
         }
 
-        //timeline.Play();
+        timeline.Play();
     }
 
     void Update()
