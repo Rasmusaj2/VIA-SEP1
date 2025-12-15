@@ -1,5 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/_prefabs/PlaySceneUI/PlaySceneUSS.uss?fileID=7433441132597879392&amp;guid=5d805c456a8b2ba4d8ee9a33903ee45e&amp;type=3#PlaySceneUSS" />
+    <Style src="project://database/Assets/_prefabs/LBEntryUSS.uss?fileID=7433441132597879392&amp;guid=fdca7727b5e1f2542b67b4b6d7837221&amp;type=3#LBEntryUSS" />
     <ui:VisualElement style="flex-grow: 1;">
         <ui:Label text="0" name="combotxt" class="playscene-combo">
             <Bindings>
@@ -21,5 +22,20 @@
                 <ui:DataBinding property="text" data-source-path="accuracyText" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
             </Bindings>
         </ui:Label>
+        <ui:VisualElement name="lbentrypanel" class="lbentry-panel" style="flex-grow: 1;">
+            <ui:Label text="Save score" name="lbentryheader" class="lbentry-header" />
+            <ui:Label text="0" name="lbentryscoretxt" class="lbentryscore-txt">
+                <Bindings>
+                    <ui:DataBinding property="text" data-source-path="scoreText" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
+                </Bindings>
+            </ui:Label>
+            <ui:TextField placeholder-text="Enter name" name="lbentryname" class="lbentryname-txtfield">
+                <Bindings>
+                    <ui:DataBinding property="value" data-source-path="leaderboardName" data-source-type="PlaySceneUIScript, Assembly-CSharp" binding-mode="TwoWay" />
+                </Bindings>
+            </ui:TextField>
+            <ui:Button text="Save score" name="lbentrysavebtn" />
+            <ui:Button text="Cancel" name="lbentrycancelbtn" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
