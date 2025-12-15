@@ -75,6 +75,5 @@ public class GameObjectPool : MonoBehaviour
     {
         pooledObjects = new List<GameObject>();
         Allocate(poolSize);
-        Debug.Log($"poolSize: {poolSize}");
     }
 }

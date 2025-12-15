@@ -17,7 +17,6 @@ public class BeatmapPlayer : MonoBehaviour
     public NoteSpawner noteSpawner;
     public Transform hitEffectContainer;
 
-    [SerializeField]
     private Lane[] lanes = new Lane[4];
 
     private ParticleSystem[] hitEffects = new ParticleSystem[4];
@@ -29,8 +28,6 @@ public class BeatmapPlayer : MonoBehaviour
 
     void Awake()
     {
-        lanes = new Lane[4];
-
         for (int i = 0; i < lanes.Length; i++)
         {
             lanes[i] = new Lane();
@@ -143,7 +140,6 @@ public class BeatmapPlayer : MonoBehaviour
         double noteTime = timeline.ToSeconds(note.beat);
         double hitTime = time - timeline.realStartTime;
 
-        Debug.Log(hitTime - noteTime);
         if (Math.Abs(hitTime - noteTime) < noteHitThreshold)
         {
             DespawnNote(laneType, note);

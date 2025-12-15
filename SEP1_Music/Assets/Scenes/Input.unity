@@ -360,7 +360,6 @@ GameObject:
   m_Component:
   - component: {fileID: 381197904}
   - component: {fileID: 381197906}
-  - component: {fileID: 381197905}
   m_Layer: 0
   m_Name: Lane
   m_TagString: Untagged
@@ -383,18 +382,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1206244789}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &381197905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381197903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cd42bd3c80d6614bb83aa4a39e0cc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &381197906
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1060,7 +1047,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1164309738}
   - component: {fileID: 1164309737}
-  - component: {fileID: 1164309736}
   m_Layer: 0
   m_Name: Lane
   m_TagString: Untagged
@@ -1068,18 +1054,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1164309736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1164309735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cd42bd3c80d6614bb83aa4a39e0cc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &1164309737
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1473,7 +1447,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1680466673}
   - component: {fileID: 1680466672}
-  - component: {fileID: 1680466671}
   m_Layer: 0
   m_Name: Lane
   m_TagString: Untagged
@@ -1481,18 +1454,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1680466671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1680466670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cd42bd3c80d6614bb83aa4a39e0cc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &1680466672
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1623,7 +1584,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1907944961}
   - component: {fileID: 1907944960}
-  - component: {fileID: 1907944959}
   m_Layer: 0
   m_Name: Edge
   m_TagString: Untagged
@@ -1631,18 +1591,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1907944959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1907944958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cd42bd3c80d6614bb83aa4a39e0cc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &1907944960
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1723,7 +1671,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2104354094}
   - component: {fileID: 2104354093}
-  - component: {fileID: 2104354092}
   m_Layer: 0
   m_Name: Lane
   m_TagString: Untagged
@@ -1731,18 +1678,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2104354092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2104354091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cd42bd3c80d6614bb83aa4a39e0cc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &2104354093
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1823,7 +1758,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1709742227719441628}
   - component: {fileID: 2559851438518979084}
-  - component: {fileID: 4348558803747823580}
   m_Layer: 0
   m_Name: Edge
   m_TagString: Untagged
@@ -1998,18 +1932,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4348558803747823580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 848496674245983553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cd42bd3c80d6614bb83aa4a39e0cc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
