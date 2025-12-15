@@ -42,7 +42,7 @@ public class NodeScript : MonoBehaviour
         if (nodeHit == true)
         {
             //Når nodehit = true evalueres scoren baseret på afstand fra scoreline og objektet fjernes
-            gameObject.GetComponentInParent<ScoreManager>().EvaluateHit(gameObject.transform.position.y);
+            gameObject.GetComponentInParent<ScoreManager>().EvaluateHit(gameObject.transform.position.y, 0.0);
             Destroy(gameObject);
         }
         else
@@ -66,7 +66,7 @@ public class NodeScript : MonoBehaviour
     {
         if (gameObject.transform.position.y <= despawnHeight)
         {
-            gameObject.GetComponentInParent<ScoreManager>().MissedHit();
+            //gameObject.GetComponentInParent<ScoreManager>().MissedHit();
             Destroy(gameObject);
         }
     }

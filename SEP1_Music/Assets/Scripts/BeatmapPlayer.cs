@@ -1,6 +1,7 @@
-using Math = System.Math;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum HitPhase
 {
@@ -15,6 +16,7 @@ public class BeatmapPlayer : MonoBehaviour
     public Timeline timeline;
     public TimelineDisplay timelineDisplay;
     public NoteSpawner noteSpawner;
+    public ScoreManager scoreManager;
     public Transform hitEffectContainer;
 
     private Lane[] lanes = new Lane[4];
@@ -68,9 +70,9 @@ public class BeatmapPlayer : MonoBehaviour
         return note;
     }
 
-    private void DespawnNote(LaneType laneType, Note note)
+    private void DespawnNote(Note note)
     {
-        Lane lane = lanes[(int)laneType];
+        Lane lane = lanes[(int)note.laneType];
         if (lane.GetNotesCount() == 0)
             return;
 
@@ -103,7 +105,8 @@ public class BeatmapPlayer : MonoBehaviour
                 float height = timelineDisplay.ToDisplacement(note.beat - timeline.beat);
                 if (height < notesDestroyHeight)
                 {
-                    DespawnNote((LaneType)l, note);
+                    DespawnNote(note);
+                    scoreManager.EvaluateHit(0.0, 999.9);
                 }
             }
         }
@@ -125,6 +128,17 @@ public class BeatmapPlayer : MonoBehaviour
         return null;
     }
 
+    private void ExecuteNoteHit(Note note, double hitTime)
+    {
+        double noteTime = timeline.ToSeconds(note.beat);
+        bool hit = scoreManager.EvaluateHit(noteTime, hitTime);
+
+        if (hit)
+        {
+            DespawnNote(note);
+        }
+    }
+
     public void Hit(LaneType laneType, HitPhase phase, double time)
     {
         if (phase != HitPhase.Attack)
@@ -137,12 +151,8 @@ public class BeatmapPlayer : MonoBehaviour
         if (note == null)
             return;
 
-        double noteTime = timeline.ToSeconds(note.beat);
         double hitTime = time - timeline.realStartTime;
 
-        if (Math.Abs(hitTime - noteTime) < noteHitThreshold)
-        {
-            DespawnNote(laneType, note);
-        }
+        ExecuteNoteHit(note, hitTime);
     }
 }

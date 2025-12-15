@@ -1,5 +1,5 @@
 using System.IO;
-using System.Runtime.CompilerServices;
+using Math = System.Math;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,6 +14,11 @@ public class ScoreManager : MonoBehaviour
     public string accuracyText = "100%";
     private float maxScore;
     public string hitText;
+
+    public const double SCORE_PERFECT_THRESHOLD = 0.02;
+    public const double SCORE_GREAT_THRESHOLD = 0.04;
+    public const double SCORE_GOOD_THRESHOLD = 0.08;
+    public const double SCORE_OK_THRESHOLD = 0.12;
 
 
     private static float scoreLinePositionY;
@@ -34,49 +39,45 @@ public class ScoreManager : MonoBehaviour
         scoreLinePositionY = scoreLine.transform.position.y;
     }
 
-    public void EvaluateHit(float nodePosition)
+    public bool EvaluateHit(double noteTime, double hitTime)
     {
+        bool hit = true;
+        double timeDifference = Math.Abs(hitTime - noteTime);
         //Score uddeles baseret på forskellen på positionen af noden og scorelinen. Derudover ændres UI for at give feedback
-        switch (scoreLinePositionY - nodePosition)
+        switch (timeDifference)
         {
-            case > 0.5f:
-                this.scoreNumber += 200;
-                hitText = "Great!";
-                combo++;
-                break;
-            case 0:
-                this.scoreNumber += 300;
+            case < SCORE_PERFECT_THRESHOLD:
+                scoreNumber += 300;
                 hitText = "Perfect!";
                 combo++;
                 break;
-            case > -0.5f:
-                this.scoreNumber += 200;
+            case < SCORE_GREAT_THRESHOLD:
+                scoreNumber += 200;
                 hitText = "Great!";
                 combo++;
                 break;
-            case > -1:
-                this.scoreNumber += 100;
+            case < SCORE_GOOD_THRESHOLD:
+                scoreNumber += 100;
                 hitText = "Good";
                 combo++;
                 break;
-            case > -1.5f:
-                this.scoreNumber += 50;
-                hitText = "Bad";
+            case < SCORE_OK_THRESHOLD:
+                scoreNumber += 50;
+                hitText = "Ok";
                 combo++;
+                break;
+            default:
+                hit = false;
+                hitText = "Missed";
+                combo = 0;
                 break;
 
         }
 
         scoreText = $"{scoreNumber:D6}";
         CalculateAccuracy();
-        
-    }
 
-    public void MissedHit()
-    {
-        this.combo = 0;
-        hitText = "Missed";
-        gameObject.GetComponent<InfinitePlayer>().health--; 
+        return hit;
     }
 
     public void ResetScore()
