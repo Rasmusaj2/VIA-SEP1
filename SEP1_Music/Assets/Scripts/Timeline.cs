@@ -7,12 +7,14 @@ public class Timeline : MonoBehaviour
     public int beatsPerMeasure = 4;
     [Min(1)]
     public double beatsPerMinute = 128;
+    public double anticipation = 5.0;
 
     [Header("Time")]
     public double realStartTime;
     public double audioStartTime;
     public double time = 0.0; // Time since the start of the timeline
     public double beat = 0.0; // Also provide the time in number of beats, for easier sync with music
+    public bool isPlaying = false;
 
     void Awake()
     {
@@ -20,18 +22,31 @@ public class Timeline : MonoBehaviour
 
     void Start()
     {
-        // The current time since the application start can be at any value when
-        // the timeline starts. Hence we read the time once when the
-        // timeline starts, and then measure all timeline-related timings against this
-        // starting time
-        realStartTime = Time.realtimeSinceStartupAsDouble;
-        audioStartTime = AudioSettings.dspTime;
     }
 
     void Update()
     {
-        time = Time.realtimeSinceStartupAsDouble - realStartTime;
-        beat = ToBeats(time);
+        if (isPlaying)
+        {
+            time = Time.realtimeSinceStartupAsDouble - realStartTime;
+            beat = ToBeats(time);
+        }
+    }
+
+    public void Play()
+    {
+        // The current time since the application start can be at any value when
+        // the timeline starts. Hence we read the time once when the
+        // timeline starts, and then measure all timeline-related timings against this
+        // starting time
+        realStartTime = Time.realtimeSinceStartupAsDouble + anticipation;
+        audioStartTime = AudioSettings.dspTime + anticipation;
+        isPlaying = true;
+    }
+
+    public void Stop()
+    {
+        isPlaying = false;
     }
     
     // Converts seconds into a fractional number of beats, based on bpm

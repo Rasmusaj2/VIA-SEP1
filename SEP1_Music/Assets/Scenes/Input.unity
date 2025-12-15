@@ -654,6 +654,14 @@ PrefabInstance:
       propertyPath: hitEffectContainer
       value: 
       objectReference: {fileID: 739394523}
+    - target: {fileID: 4369596536986681382, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 764405679421159432, guid: 2ea8817dcb6c15a4fbd22ceed75fc6c5, type: 3}
+    - target: {fileID: 4369596536986681382, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7033769728659723680, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -697,6 +705,10 @@ PrefabInstance:
     - target: {fileID: 9024292393278256432, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
       propertyPath: m_Name
       value: Gameplay
+      objectReference: {fileID: 0}
+    - target: {fileID: 9024292393278256432, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
