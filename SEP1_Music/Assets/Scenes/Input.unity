@@ -207,6 +207,57 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1703391655413804945, guid: 5f65becfffcc3d940a01bfe6bcc3dbab, type: 3}
   m_PrefabInstance: {fileID: 1471701143}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &567468434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 567468436}
+  - component: {fileID: 567468435}
+  m_Layer: 5
+  m_Name: LeaderboardEntryUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &567468435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567468434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 0fd7fe790c7137346815843cad5f0057, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+--- !u!4 &567468436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567468434}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &655348363 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 677620302675976276, guid: 7a776a8e72a96584daebb7e9274055d8, type: 3}
@@ -784,6 +835,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Timeline
       objectReference: {fileID: 0}
+    - target: {fileID: 2527221496683233572, guid: 4dc9a3974092d2346a055122369cb561, type: 3}
+      propertyPath: anticipation
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5029971378524472631, guid: 4dc9a3974092d2346a055122369cb561, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -844,5 +899,6 @@ SceneRoots:
   - {fileID: 1896355149472100791}
   - {fileID: 6907214340415705997}
   - {fileID: 1647311095}
-  - {fileID: 10085453}
   - {fileID: 1471701143}
+  - {fileID: 10085453}
+  - {fileID: 567468436}

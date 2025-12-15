@@ -1,0 +1,18 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_prefabs/LBEntryUSS.uss?fileID=7433441132597879392&amp;guid=fdca7727b5e1f2542b67b4b6d7837221&amp;type=3#LBEntryUSS" />
+    <ui:VisualElement name="lbentrypanel" enabled="true" class="lbentry-panel" style="flex-grow: 1; align-items: auto;">
+        <ui:Label text="Save score" name="lbentryheader" class="lbentry-header" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+        <ui:Label text="0" name="lbentryscoretxt" class="lbentryscore-txt" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);">
+            <Bindings>
+                <ui:DataBinding property="text" data-source-path="scoreText" data-source-type="ScoreManager, Assembly-CSharp" binding-mode="ToTarget" />
+            </Bindings>
+        </ui:Label>
+        <ui:TextField placeholder-text="Enter name" name="lbentryname" class="lbentryname-txtfield" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);">
+            <Bindings>
+                <ui:DataBinding property="value" data-source-path="leaderboardName" data-source-type="PlaySceneUIScript, Assembly-CSharp" binding-mode="TwoWay" />
+            </Bindings>
+        </ui:TextField>
+        <ui:Button text="Save score" name="lbentrysavebtn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+        <ui:Button text="Cancel" name="lbentrycancelbtn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+    </ui:VisualElement>
+</ui:UXML>
