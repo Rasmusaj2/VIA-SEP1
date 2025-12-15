@@ -1,0 +1,39 @@
+.lbentry-panel {
+    -unity-background-image-tint-color: rgb(0, 167, 220);
+    background-color: rgb(19, 173, 221);
+    width: 795px;
+    align-items: auto;
+    height: 527px;
+    align-self: center;
+    justify-content: flex-start;
+    align-content: flex-start;
+    position: absolute;
+    bottom: 321px;
+    border-top-width: 9px;
+    border-right-width: 9px;
+    border-bottom-width: 9px;
+    border-left-width: 9px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+}
+
+.lbentry-header {
+    align-self: flex-start;
+    font-size: 61px;
+}
+
+.lbentryscore-txt {
+    align-items: stretch;
+    align-self: center;
+    font-size: 37px;
+    top: 50px;
+    color: rgb(253, 232, 0);
+}
+
+.lbentryname-txtfield {
+    align-self: center;
+    top: 127px;
+    width: 439px;
+}
