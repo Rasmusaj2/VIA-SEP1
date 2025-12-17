@@ -21,6 +21,12 @@
                     </ui:SliderInt>
                 </ui:ScrollView>
             </ui:VisualElement>
+            <ui:VisualElement name="gamemodepanel" enabled="false" focusable="false" class="optionspanel" style="flex-grow: 1; visibility: hidden;">
+                <ui:Label text="Select Gamemode" name="gamemodeselectorheader" class="options-header" />
+                <ui:Button text="Button" name="startclosebutton" class="options-exitbutton menu_button" />
+                <ui:Button text="PLAY INFINITE" name="infiniteplaybutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/GreenButtonIMG.png?fileID=2800000&amp;guid=01bee15b8af408447959d708486d4c1f&amp;type=3#GreenButtonIMG&quot;); width: 66%; height: 40%; left: 20%;" />
+                <ui:Button text="MAP SELECTOR" name="mapselectbutton" class="menu-button menu_button" style="background-image: url(&quot;project://database/Assets/_prefabs/MainMenuUI/GreenButtonIMG.png?fileID=2800000&amp;guid=01bee15b8af408447959d708486d4c1f&amp;type=3#GreenButtonIMG&quot;); width: 66%; height: 40%; left: 20%;" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

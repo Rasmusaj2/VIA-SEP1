@@ -329,6 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a959605875823cd4bb1647d9359d75aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMode: 0
   crossfadeTime: 1
   musicSources:
   - {fileID: 0}
@@ -336,10 +337,10 @@ MonoBehaviour:
   audiomixer: {fileID: 24100000, guid: 75ddccf60ab2e0845a1f03727d6301d9, type: 2}
   musicVolumeParameter: MusicVolume
   playlist:
-  - {fileID: 8300000, guid: 434392634a2593e429f4cce42143ef8d, type: 3}
-  - {fileID: 8300000, guid: 362ed35634c857a4caea4f59714c6b35, type: 3}
-  - {fileID: 8300000, guid: 75bdca349ee386c44954775ade011143, type: 3}
-  - {fileID: 8300000, guid: 4cff75ad5f5c2694d990b435e00b0191, type: 3}
+  - {fileID: 8300000, guid: c11ed694bf86e5d4d8d0c0df3b7b8da5, type: 3}
+  - {fileID: 8300000, guid: 85975234a83fded48b87662fe733a984, type: 3}
+  - {fileID: 8300000, guid: 77991a7307653f748931dab87c33662d, type: 3}
+  - {fileID: 8300000, guid: 77842e9e9395a304bb06a1779e201a62, type: 3}
 --- !u!4 &1825803493
 Transform:
   m_ObjectHideFlags: 0

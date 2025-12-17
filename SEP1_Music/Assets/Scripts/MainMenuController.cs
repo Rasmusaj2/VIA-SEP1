@@ -9,6 +9,7 @@ public class MainMenuController : MonoBehaviour
     // Scener skal tilføjes i scene list under build profiles
     string playScene = "PlayScene";
     string leaderboardScene = "LeaderBoardScene";
+    string mapSelectorScene = "MapSelectorScene";
 
     public VisualElement mainMenuUI;    
     public Button playButton;
@@ -17,7 +18,12 @@ public class MainMenuController : MonoBehaviour
     public Button optionsButton;
     public Button optionsCancelButton;
 
+    public Button startCloseButton;
+    public Button infinitePlayButton;
+    public Button mapSelectButton;
+
     public VisualElement optionsPanel;
+    public VisualElement gamemodePanel;
 
     private void Start()
     {
@@ -57,16 +63,43 @@ public class MainMenuController : MonoBehaviour
         optionsCancelButton.clicked += OnOptionsCancelButtonClicked;
 
         optionsPanel = mainMenuUI.Q<VisualElement>("optionspanel");
-
+        gamemodePanel = mainMenuUI.Q<VisualElement>("gamemodepanel");
 
         
-        
+        startCloseButton = mainMenuUI.Q<Button>("startclosebutton");
+        startCloseButton.clicked += OnPlayScreenCloseClicked;
+        infinitePlayButton = mainMenuUI.Q<Button>("infiniteplaybutton");
+        infinitePlayButton.clicked += OnInfinitePlayButtonClicked;
+        mapSelectButton = mainMenuUI.Q<Button>("mapselectbutton");
+        mapSelectButton.clicked += OnMapSelectButtonClicked;
+
     }
 
     private void OnPlayButtonClicked()
     {
         Debug.Log("Play button clicked");
+        gamemodePanel.SetEnabled(true);
+        gamemodePanel.visible = true;
+    }
+
+    private void OnPlayScreenCloseClicked()
+    {
+        Debug.Log("PlayScreen cancel button clicked");
+        gamemodePanel.SetEnabled(false);
+        gamemodePanel.visible = false;
+    }
+
+    private void OnInfinitePlayButtonClicked()
+    {
+        Debug.Log("Play button clicked");
+        CrossSceneManager.SelectedMap = null;
         SceneManager.LoadScene(playScene);
+    }
+
+    private void OnMapSelectButtonClicked()
+    {
+        Debug.Log("Map Select button clicked");
+        SceneManager.LoadScene(mapSelectorScene);
     }
 
     private void OnOptionsButtonClicked()

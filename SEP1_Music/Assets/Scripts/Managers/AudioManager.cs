@@ -28,7 +28,7 @@ public class AudioManager : MonoBehaviour
 
     private int activeIndex = 0;
     private int inactiveIndex
-    {
+    {   
         get
         {
             if (activeIndex == 0)
@@ -55,8 +55,6 @@ public class AudioManager : MonoBehaviour
     [Header("Music Playlist")]
     public List<AudioClip> playlist = new List<AudioClip>();
     private int currentSongIndex = 0;
-
-    public bool allowPlaylistRotation = true;
 
     private void Awake()
     {
