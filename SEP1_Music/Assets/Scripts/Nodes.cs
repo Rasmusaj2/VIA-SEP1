@@ -24,11 +24,12 @@ public class Beatmap
     public string Author;
     public string Artist;
 
-    public float NodeSpeed;
+    public double Tempo;
+    public double StartOffset;
 
     public List<BeatNode> Nodes;
 
-    public Beatmap(List<BeatNode> nodes, string author, string artist, float nodeSpeed)
+    public Beatmap(List<BeatNode> nodes, string author, string artist, double tempo)
     {
         // Make sure nodes are kept in order for playback
         // Use of lambda function to make sure to sort based on node-time (could be done by overriding compareTo as well)
@@ -37,7 +38,8 @@ public class Beatmap
         Nodes = nodes;
         Author = author;
         Artist = artist;
-        NodeSpeed = nodeSpeed;
+        Tempo = tempo;
+        StartOffset = 0.0;
     }
 }
 

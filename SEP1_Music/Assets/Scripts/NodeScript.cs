@@ -23,7 +23,7 @@ public class NodeScript : MonoBehaviour
 
         if (gameObject.GetComponentInParent<BeatmapPlayer>() != null)
         {
-            speed = gameObject.GetComponentInParent<BeatmapPlayer>().beatmap.NodeSpeed;
+            speed = (float)gameObject.GetComponentInParent<BeatmapPlayer>().beatmap.Tempo;
             Debug.Log("Loaded speed from BeatmapPlayer: " + speed);
         } else
         {

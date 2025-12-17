@@ -95,12 +95,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySong(AudioClip clip, float startTime = 0f)
+    public void PlaySong(AudioClip clip, double startTime = 0.0, double scheduleTime = 0.01)
     {
         Active.clip = clip;
 
-        songStartDspTime = AudioSettings.dspTime + 0.010f;
-        Active.time = startTime;
+        songStartDspTime = scheduleTime;
+        Active.time = (float)startTime;
         Active.PlayScheduled(songStartDspTime);
 
         songIsPlaying = true;

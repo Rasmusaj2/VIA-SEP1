@@ -75,7 +75,7 @@ public class MapSelector : MonoBehaviour
     [SerializeField] private bool isTransitioning = false;
 
     [Header("Target Scenes")]
-    public string mapPlaySceneName = "BeatmapPlayScene";
+    public string mapPlaySceneName = "Gameplay";
     public string mainMenuSceneName = "MainMenu";
 
     [Header("Leaderboard Data")]

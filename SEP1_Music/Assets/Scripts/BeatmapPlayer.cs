@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,8 +15,10 @@ public class BeatmapPlayer : MonoBehaviour
     public Beatmap beatmap;
     public Timeline timeline;
     public TimelineDisplay timelineDisplay;
+    public Metronome metronome;
     public NoteSpawner noteSpawner;
     public ScoreManager scoreManager;
+    public Health health;
     public Transform hitEffectContainer;
 
     private Lane[] lanes = new Lane[4];
@@ -27,6 +29,8 @@ public class BeatmapPlayer : MonoBehaviour
     private double nextNoteBeat = 0.0;
     private float notesSpawnHeight = 5.0f;
     private float notesDestroyHeight = -5.0f;
+
+    private bool gameOver = false;
 
     void Awake()
     {
@@ -43,7 +47,7 @@ public class BeatmapPlayer : MonoBehaviour
             hitEffects[i] = hitEffectContainer.GetChild(i).GetComponent<ParticleSystem>();
         }
 
-        timeline.Play();
+        Begin();
     }
 
     void Update()
@@ -63,6 +67,61 @@ public class BeatmapPlayer : MonoBehaviour
         RemoveDeadNotes();
     }
 
+    private void Begin()
+    {
+        gameOver = false;
+
+        Map map = CrossSceneManager.SelectedMap;
+        if (map != null)
+        {
+            timeline.beatsPerMinute = map.beatmap.Tempo;
+            StartCoroutine(LoadAndScheduleMusic());
+        }
+        else
+        {
+            Debug.LogWarning("No map selected");
+        }
+
+        health.Reset();
+        timeline.Play();
+    }
+
+    private void GameOver()
+    {
+        gameOver = true;
+        Debug.Log("Game Over!");
+        timeline.Stop();
+        DespawnAllNotes();
+        AudioManager.Instance.StopSong();
+    }
+
+    private IEnumerator LoadAndScheduleMusic()
+    {
+        Map map = CrossSceneManager.SelectedMap;
+        if (map != null)
+        {
+            yield return AudioLoader.LoadAudio(map.AudioFilePath);
+            AudioClip clip = AudioLoader.loadedAudio;
+            double audioDelayCompensationSeconds = 0.001 * metronome.audioDelayCompensationMilliseconds;
+            double scheduleTime = timeline.audioStartTime - audioDelayCompensationSeconds + map.beatmap.StartOffset;
+            AudioManager.Instance.PlaySong(clip, 0.0, scheduleTime);
+            Debug.Log("Playing song");
+        }
+        else
+        {
+            Debug.LogWarning("No map selected");
+        }
+    }
+
+    private void TakeDamage()
+    {
+        health.TakeDamage();
+        if (health.health == 0)
+        {
+            GameOver();
+        }
+    }
+
     private Note SpawnNote(LaneType laneType, double beat)
     {
         Lane lane = lanes[(int)laneType];
@@ -80,6 +139,17 @@ public class BeatmapPlayer : MonoBehaviour
 
         noteSpawner.DespawnNote(note);
         lane.RemoveNote(note);
+    }
+
+    private void DespawnAllNotes()
+    {
+        for (int l = 0; l < lanes.Length; l++)
+        {
+            List<Note> notes = lanes[l].GetNotes();
+            // Iterate in reverse order as we are removing notes
+            for (int i = notes.Count - 1; i >= 0; i--)
+                DespawnNote(notes[i]);
+        }
     }
 
     private void UpdateNotePositions()
@@ -109,6 +179,7 @@ public class BeatmapPlayer : MonoBehaviour
                 {
                     DespawnNote(note);
                     scoreManager.EvaluateHit(0.0, 999.9);
+                    TakeDamage();
                 }
             }
         }
@@ -139,10 +210,17 @@ public class BeatmapPlayer : MonoBehaviour
         {
             DespawnNote(note);
         }
+        else
+        {
+            TakeDamage();
+        }
     }
 
     public void Hit(LaneType laneType, HitPhase phase, double time)
     {
+        if (gameOver)
+            return;
+
         if (phase != HitPhase.Attack)
             return;
 

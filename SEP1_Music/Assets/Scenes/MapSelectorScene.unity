@@ -179,7 +179,7 @@ MonoBehaviour:
   sceneTransitionDelay: 0.15
   moveCapsuleDistance: 10
   isTransitioning: 0
-  mapPlaySceneName: BeatmapPlayScene
+  mapPlaySceneName: Gameplay
   mainMenuSceneName: MainMenu
   leaderboardEntryCount: 5
   currentlyPlayingAudio: {fileID: 0}
