@@ -501,36 +501,14 @@ public class MapSelector : MonoBehaviour
 
     private IEnumerator LoadAndPlayAudio(string filepath)
     {
-        string url = "file://" + filepath;
+        yield return AudioLoader.LoadAudio(filepath);
 
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
-        {
-            DownloadHandlerAudioClip dh = (DownloadHandlerAudioClip)www.downloadHandler;
-            dh.streamAudio = true; // keep as true to avoid freezing process when reading file
+        // selection changed mid load, avoid playing
+        if (UserMaps.Maps[selectedMapIndex].AudioFilePath != filepath)
+            yield break;
 
-            yield return www.SendWebRequest();
-
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError("Error loading audio " + www.error);
-                yield break;
-            }
-
-            AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
-
-            if (clip == null)
-            {
-                Debug.Log("Loaded audio is null");
-                yield break;
-            }
-
-            // selection changed mid load, avoid playing
-            if (UserMaps.Maps[selectedMapIndex].AudioFilePath != filepath)
-                yield break;
-
-            targetAudioClip = clip;
-            StartCrossfadeToClip(clip);
-        }
+        targetAudioClip = AudioLoader.loadedAudio;
+        StartCrossfadeToClip(targetAudioClip);
     }
 
 
