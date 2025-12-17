@@ -19,11 +19,15 @@ public class BeatmapPlayer : MonoBehaviour
     public NoteSpawner noteSpawner;
     public ScoreManager scoreManager;
     public Health health;
-    public Transform hitEffectContainer;
+
+    public delegate void BeginEvent();
+    public delegate void GameOverEvent();
+    public delegate void HitEvent(LaneType laneType);
+    public event BeginEvent onBegin;
+    public event GameOverEvent onGameOver;
+    public event HitEvent onHit;
 
     private Lane[] lanes = new Lane[4];
-
-    private ParticleSystem[] hitEffects = new ParticleSystem[4];
 
     private double noteHitThreshold = 0.15;
     private double nextNoteBeat = 0.0;
@@ -42,11 +46,6 @@ public class BeatmapPlayer : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < lanes.Length; i++)
-        {
-            hitEffects[i] = hitEffectContainer.GetChild(i).GetComponent<ParticleSystem>();
-        }
-
         Begin();
     }
 
@@ -84,6 +83,7 @@ public class BeatmapPlayer : MonoBehaviour
 
         health.Reset();
         timeline.Play();
+        onBegin?.Invoke();
     }
 
     private void GameOver()
@@ -93,6 +93,7 @@ public class BeatmapPlayer : MonoBehaviour
         timeline.Stop();
         DespawnAllNotes();
         AudioManager.Instance.StopSong();
+        onGameOver?.Invoke();
     }
 
     private IEnumerator LoadAndScheduleMusic()
@@ -224,8 +225,7 @@ public class BeatmapPlayer : MonoBehaviour
         if (phase != HitPhase.Attack)
             return;
 
-        ParticleSystem particle = hitEffects[(int)laneType];
-        particle.Play();
+        onHit?.Invoke(laneType);
 
         Note note = GetTargetNote(laneType);
         if (note == null)

@@ -306,7 +306,6 @@ MonoBehaviour:
   audiomixer: {fileID: 24100000, guid: 75ddccf60ab2e0845a1f03727d6301d9, type: 2}
   musicVolumeParameter: MusicVolume
   playlist: []
-  allowPlaylistRotation: 1
 --- !u!4 &681535906
 Transform:
   m_ObjectHideFlags: 0
@@ -500,51 +499,6 @@ MonoBehaviour:
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0
---- !u!1 &1316403089
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1316403091}
-  - component: {fileID: 1316403090}
-  m_Layer: 0
-  m_Name: AudioLoader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1316403090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1316403089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09a7f27a19386ef42a24262b2edc009a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loadedAudio: {fileID: 0}
---- !u!4 &1316403091
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1316403089}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1471701143
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -762,7 +716,7 @@ PrefabInstance:
     - target: {fileID: 2620026677525917807, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
       propertyPath: loader
       value: 
-      objectReference: {fileID: 1316403090}
+      objectReference: {fileID: 0}
     - target: {fileID: 2620026677525917807, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
       propertyPath: timeline
       value: 
@@ -846,6 +800,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9024292393278256432, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3608545477272778968}
+    - targetCorrespondingSourceObject: {fileID: 9024292393278256432, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3608545477272778969}
   m_SourcePrefab: {fileID: 100100000, guid: 6a507a3fee4c9ec4b900f5ed5ac1c59a, type: 3}
 --- !u!1 &3608545477272778967 stripped
 GameObject:
@@ -866,6 +823,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   health: 5
+--- !u!114 &3608545477272778969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3608545477272778967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4196798a4b9c7c8448f259616be4d014, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitEffectContainer: {fileID: 739394523}
+  player: {fileID: 798271204}
 --- !u!1001 &6907214340415705997
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1001,5 +972,4 @@ SceneRoots:
   - {fileID: 1471701143}
   - {fileID: 10085453}
   - {fileID: 567468436}
-  - {fileID: 1316403091}
   - {fileID: 681535906}
