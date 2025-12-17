@@ -532,6 +532,10 @@ PrefabInstance:
       propertyPath: optionsUI
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1869342220089918575, guid: 7a82c8c13780e3f4c99c6c1c27e31413, type: 3}
+      propertyPath: playScene
+      value: Gameplay
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

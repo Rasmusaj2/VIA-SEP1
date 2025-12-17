@@ -7,9 +7,9 @@ using UnityEngine.UIElements;
 public class MainMenuController : MonoBehaviour
 {
     // Scener skal tilføjes i scene list under build profiles
-    string playScene = "PlayScene";
-    string leaderboardScene = "LeaderBoardScene";
-    string mapSelectorScene = "MapSelectorScene";
+    public string playScene = "PlayScene";
+    public string leaderboardScene = "LeaderBoardScene";
+    public string mapSelectorScene = "MapSelectorScene";
 
     public VisualElement mainMenuUI;    
     public Button playButton;
